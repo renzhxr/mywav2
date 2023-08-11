@@ -114,7 +114,7 @@ export const ExposeStore = (moduleRaidStr) => {
     }
 };
 
-exports.LoadUtils = () => {
+export const LoadUtils = () => {
     window.WWebJS = { ...WPP };
 
     window.WWebJS.sendSeen = async (chatId) => {
