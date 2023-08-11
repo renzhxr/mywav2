@@ -116,7 +116,7 @@ class Chat extends Base {
      * @returns {Promise<Boolean>} result
      */
     async clearMessages() {
-        return this.client.pupPage.evaluate(chatId => {
+        return this.client.mPage.evaluate(chatId => {
             return window.WWebJS.sendClearChat(chatId);
         }, this.id._serialized);
     }
@@ -126,7 +126,7 @@ class Chat extends Base {
      * @returns {Promise<Boolean>} result
      */
     async delete() {
-        return this.client.pupPage.evaluate(chatId => {
+        return this.client.mPage.evaluate(chatId => {
             return window.WWebJS.sendDeleteChat(chatId);
         }, this.id._serialized);
     }
@@ -191,7 +191,7 @@ class Chat extends Base {
      * @returns {Promise<Array<Message>>}
      */
     async fetchMessages(searchOptions) {
-        let messages = await this.client.pupPage.evaluate(async (chatId, searchOptions) => {
+        let messages = await this.client.mPage.evaluate(async (chatId, searchOptions) => {
             const msgFilter = (m) => {
                 if (m.isNotification) {
                     return false; // dont include notification messages
@@ -229,7 +229,7 @@ class Chat extends Base {
      * Simulate typing in chat. This will last for 25 seconds.
      */
     async sendStateTyping() {
-        return this.client.pupPage.evaluate(chatId => {
+        return this.client.mPage.evaluate(chatId => {
             window.WWebJS.sendChatstate('typing', chatId);
             return true;
         }, this.id._serialized);
@@ -239,7 +239,7 @@ class Chat extends Base {
      * Simulate recording audio in chat. This will last for 25 seconds.
      */
     async sendStateRecording() {
-        return this.client.pupPage.evaluate(chatId => {
+        return this.client.mPage.evaluate(chatId => {
             window.WWebJS.sendChatstate('recording', chatId);
             return true;
         }, this.id._serialized);
@@ -249,7 +249,7 @@ class Chat extends Base {
      * Stops typing or recording in chat immediately.
      */
     async clearState() {
-        return this.client.pupPage.evaluate(chatId => {
+        return this.client.mPage.evaluate(chatId => {
             window.WWebJS.sendChatstate('stop', chatId);
             return true;
         }, this.id._serialized);
