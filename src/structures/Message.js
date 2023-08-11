@@ -17,7 +17,7 @@ import Payment from './Payment.js'
 import PollVote from "./PollVote.js";
 import Reaction from './Reaction.js'
 import { MessageTypes } from '../util/Constants.js'
-import { Contact } from './Contact.js'
+import Contact from './Contact.js'
 
 /**
  * Represents a Message on WhatsApp
