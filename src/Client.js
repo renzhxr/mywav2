@@ -162,7 +162,7 @@ const playwrightOpts = this.options.playwright;
             page = (await browser.pages())[0];
         }
 
-        
+
 if (this.options.userAgent) {
 await page.setExtraHTTPHeaders({
 "User-Agent": this.options.userAgent,
@@ -926,7 +926,7 @@ const requestedVersion = this.options.webVersion;
 const versionContent = await webCache.resolve(requestedVersion);
 
 if(versionContent) {
-await this.mPage.setRequestInterception(true);
+//await this.mPage.setRequestInterception(true);
 this.mPage.on('request', async (req) => {
 if(req.url() === WhatsWebURL) {
 req.respond({
