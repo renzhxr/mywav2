@@ -139,25 +139,30 @@ let [browser, page] = [null, null];
 await this.authStrategy.beforeBrowserInitialized();
 
 const playwrightOpts = this.options.playwright;
-if (playwrightOpts && playwrightOpts.WSEndpoint) {
-browser = await playwright.chromium.connect(playwrightOpts);
-page = await browser.newPage();
-} else {
-const browserArgs = [...(playwrightOpts.args || [])];
-if(!browserArgs.find(arg => arg.includes('--user-agent'))) {
-browserArgs.push(`--user-agent=${this.options.userAgent}`);
-}
+        if (playwrightOpts && playwrightOpts.wsEndpoint) {
+            browser = await playwright.chromium.connect(playwrightOpts.wsEndpoint, {
+                timeout: 0,
+                ...playwrightOpts,
+            });
+            page = await context.newPage();
+        } else {
+            const browserArgs = [...(playwrightOpts.args || [])];
+            if (!browserArgs.find((arg) => arg.includes("--user-agent"))) {
+                browserArgs.push(`--user-agent=${this.options.userAgent}`);
+            }
 
-browser = await playwright.chromium.launchPersistentContext(
-playwrightOpts.userDataDir,
-{
-...playwrightOpts,
-args: browserArgs,
-timeout: 0,
-}
-)
-page = (await browser.pages())[0];
-}
+            browser = await playwright.chromium.launchPersistentContext(
+                playwrightOpts.userDataDir,
+                {
+                    ...playwrightOpts,
+                    args: browserArgs,
+                    timeout: 0,
+                }
+            );
+            page = (await browser.pages())[0];
+        }
+
+        
 if (this.options.userAgent) {
 await page.setExtraHTTPHeaders({
 "User-Agent": this.options.userAgent,
