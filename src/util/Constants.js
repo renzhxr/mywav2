@@ -36,7 +36,7 @@ export const DefaultOptions = {
  * @readonly
  * @enum {number}
  */
-exports.Status = {
+export const Status = {
     INITIALIZING: 0,
     AUTHENTICATING: 1,
     READY: 3
@@ -47,7 +47,7 @@ exports.Status = {
  * @readonly
  * @enum {string}
  */
-exports.Events = {
+export const Events = {
     AUTHENTICATED: 'authenticated',
     AUTHENTICATION_FAILURE: 'auth_failure',
     READY: 'ready',
