@@ -10,7 +10,7 @@
 import path from 'path'
 import fs from 'fs'
 
-import { WebCache, VersionResolveError } from './WebCache'
+import { WebCache, VersionResolveError } from './WebCache.js'
 
 /**
  * LocalWebCache - Fetches a WhatsApp Web version from a local file store
