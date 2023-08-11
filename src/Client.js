@@ -919,33 +919,29 @@ await this.destroy();
 }
 
 async initWebVersionCache() {
-const { type: webCacheType, ...webCacheOptions } = this.options.webVersionCache;
-const webCache = WebCacheFactory.createWebCache(webCacheType, webCacheOptions);
-
-const requestedVersion = this.options.webVersion;
-const versionContent = await webCache.resolve(requestedVersion);
-
-if(versionContent) {
-//await this.mPage.setRequestInterception(true);
-this.mPage.on('request', async (req) => {
-if(req.url() === WhatsWebURL) {
-req.respond({
-status: 200,
-contentType: 'text/html',
-body: versionContent
-}); 
-} else {
-req.continue();
-}
-});
-} else {
-this.mPage.on('response', async (res) => {
-if(res.ok() && res.url() === WhatsWebURL) {
-await webCache.persist(await res.text());
-}
-});
-}
-}
+    const { type: webCacheType, ...webCacheOptions } = this.options.webVersionCache;
+    const webCache = WebCacheFactory.createWebCache(webCacheType, webCacheOptions);
+  
+    const requestedVersion = this.options.webVersion;
+    const versionContent = await webCache.resolve(requestedVersion);
+  
+    if (versionContent) {
+      await this.mPage.route(WhatsWebURL, (route) => {
+        route.fulfill({
+          status: 200,
+          contentType: 'text/html',
+          body: versionContent,
+        });
+      });
+    } else {
+      this.mPage.on('response', async (res) => {
+        if (res.ok() && res.url() === WhatsWebURL) {
+          await webCache.persist(await res.text());
+        }
+      });
+    }
+  }
+  
 
 /**
  * Closes the client
