@@ -17,7 +17,7 @@ class WebCache {
 
 class VersionResolveError extends Error { }
 
-export default {
+export {
     WebCache,
     VersionResolveError
 }
