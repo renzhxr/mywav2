@@ -139,28 +139,28 @@ let [browser, page] = [null, null];
 await this.authStrategy.beforeBrowserInitialized();
 
 const playwrightOpts = this.options.playwright;
-        if (playwrightOpts && playwrightOpts.wsEndpoint) {
-            browser = await playwright.chromium.connect(playwrightOpts.wsEndpoint, {
-                timeout: 0,
-                ...playwrightOpts,
-            });
-            page = await context.newPage();
-        } else {
-            const browserArgs = [...(playwrightOpts.args || [])];
-            if (!browserArgs.find((arg) => arg.includes("--user-agent"))) {
-                browserArgs.push(`--user-agent=${this.options.userAgent}`);
-            }
+if (playwrightOpts && playwrightOpts.wsEndpoint) {
+browser = await playwright.chromium.connect(playwrightOpts.wsEndpoint, {
+timeout: 0,
+...playwrightOpts,
+});
+page = await context.newPage();
+} else {
+const browserArgs = [...(playwrightOpts.args || [])];
+if (!browserArgs.find((arg) => arg.includes("--user-agent"))) {
+browserArgs.push(`--user-agent=${this.options.userAgent}`);
+}
 
-            browser = await playwright.chromium.launchPersistentContext(
-                playwrightOpts.userDataDir,
-                {
-                    ...playwrightOpts,
-                    args: browserArgs,
-                    timeout: 0,
-                }
-            );
-            page = (await browser.pages())[0];
-        }
+browser = await playwright.chromium.launchPersistentContext(
+playwrightOpts.userDataDir,
+{
+...playwrightOpts,
+args: browserArgs,
+timeout: 0,
+}
+);
+page = (await browser.pages())[0];
+}
 
 
 if (this.options.userAgent) {
@@ -255,43 +255,43 @@ PROGRESS_MESSAGE: '//*[@id=\'app\']/div/div/div[3]',
 */
 
 await page.evaluate(() => {
-    function getElementByXpath(path) {
-      return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    }
-  
-    let lastPercent = null;
-    let lastPercentMessage = null;
-  
-    window.loadingScreen = async (percent, message) => {
-      if (lastPercent !== percent || lastPercentMessage !== message) {
-        this.emit(Events.LOADING_SCREEN, percent, message);
-        lastPercent = percent;
-        lastPercentMessage = message;
-      }
-    };
-  
-    const selectors = {
-      PROGRESS: '//*[@id=\'app\']/div/div/div[2]/progress',
-      PROGRESS_MESSAGE: '//*[@id=\'app\']/div/div/div[3]',
-    };
-  
-    const observer = new MutationObserver(() => {
-      let progressBar = getElementByXpath(selectors.PROGRESS);
-      let progressMessage = getElementByXpath(selectors.PROGRESS_MESSAGE);
-  
-      if (progressBar) {
-        window.loadingScreen(progressBar.value, progressMessage.innerText);
-      }
-    });
-  
-    observer.observe(document, {
-      attributes: true,
-      childList: true,
-      characterData: true,
-      subtree: true,
-    });
-  });
-  
+function getElementByXpath(path) {
+return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
+
+let lastPercent = null;
+let lastPercentMessage = null;
+
+window.loadingScreen = async (percent, message) => {
+if (lastPercent !== percent || lastPercentMessage !== message) {
+this.emit(Events.LOADING_SCREEN, percent, message);
+lastPercent = percent;
+lastPercentMessage = message;
+}
+};
+
+const selectors = {
+PROGRESS: '//*[@id=\'app\']/div/div/div[2]/progress',
+PROGRESS_MESSAGE: '//*[@id=\'app\']/div/div/div[3]',
+};
+
+const observer = new MutationObserver(() => {
+let progressBar = getElementByXpath(selectors.PROGRESS);
+let progressMessage = getElementByXpath(selectors.PROGRESS_MESSAGE);
+
+if (progressBar) {
+window.loadingScreen(progressBar.value, progressMessage.innerText);
+}
+});
+
+observer.observe(document, {
+attributes: true,
+childList: true,
+characterData: true,
+subtree: true,
+});
+});
+
 const INTRO_IMG_SELECTOR = '[data-testid="intro-md-beta-logo-dark"], [data-testid="intro-md-beta-logo-light"], [data-asset-intro-image-light="true"], [data-asset-intro-image-dark="true"]';
 const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
@@ -354,162 +354,162 @@ await this.destroy();
 });
 
 await page.evaluate(
-    function (selectors) {
-        const qr_container = document.querySelector(
-            selectors.QR_CONTAINER
-        );
-        window.qrChanged(qr_container.dataset.ref);
+function (selectors) {
+const qr_container = document.querySelector(
+selectors.QR_CONTAINER
+);
+window.qrChanged(qr_container.dataset.ref);
 
-        const obs = new MutationObserver((muts) => {
-            muts.forEach((mut) => {
-                // Listens to qr token change
-                if (
-                    mut.type === 'attributes' &&
-                    mut.attributeName === 'data-ref'
-                ) {
-                    window.qrChanged(mut.target.dataset.ref);
-                }
-                // Listens to retry button, when found, click it
-                else if (mut.type === 'childList') {
-                    const retry_button = document.querySelector(
-                        selectors.QR_RETRY_BUTTON
-                    );
-                    if (retry_button) retry_button.click();
-                }
-            });
-        });
-        obs.observe(qr_container.parentElement, {
-            subtree: true,
-            childList: true,
-            attributes: true,
-            attributeFilter: ['data-ref'],
-        });
-    },
-    {
-        QR_CONTAINER,
-        QR_RETRY_BUTTON,
-    }
+const obs = new MutationObserver((muts) => {
+muts.forEach((mut) => {
+// Listens to qr token change
+if (
+mut.type === 'attributes' &&
+mut.attributeName === 'data-ref'
+) {
+window.qrChanged(mut.target.dataset.ref);
+}
+// Listens to retry button, when found, click it
+else if (mut.type === 'childList') {
+const retry_button = document.querySelector(
+selectors.QR_RETRY_BUTTON
+);
+if (retry_button) retry_button.click();
+}
+});
+});
+obs.observe(qr_container.parentElement, {
+subtree: true,
+childList: true,
+attributes: true,
+attributeFilter: ['data-ref'],
+});
+},
+{
+QR_CONTAINER,
+QR_RETRY_BUTTON,
+}
 )
 }
 
 const handleLinkWithPhoneNumber = async () => {
-    const LINK_WITH_PHONE_BUTTON = '[data-testid="link-device-qrcode-alt-linking-hint"]';
-    const PHONE_NUMBER_INPUT = '[data-testid="link-device-phone-number-input"]';
-    const NEXT_BUTTON = '[data-testid="link-device-phone-number-entry-next-button"]';
-    const CODE_CONTAINER = '[data-testid="link-with-phone-number-code-cells"]';
-    const GENERATE_NEW_CODE_BUTTON = '[data-testid="popup-controls-ok"]';
-    const LINK_WITH_PHONE_VIEW = '[data-testid="link-device-phone-number-code-view"]';
+const LINK_WITH_PHONE_BUTTON = '[data-testid="link-device-qrcode-alt-linking-hint"]';
+const PHONE_NUMBER_INPUT = '[data-testid="link-device-phone-number-input"]';
+const NEXT_BUTTON = '[data-testid="link-device-phone-number-entry-next-button"]';
+const CODE_CONTAINER = '[data-testid="link-with-phone-number-code-cells"]';
+const GENERATE_NEW_CODE_BUTTON = '[data-testid="popup-controls-ok"]';
+const LINK_WITH_PHONE_VIEW = '[data-testid="link-device-phone-number-code-view"]';
 
-    await page.exposeFunction('codeChanged', async (code) => {
-        /**
-         * Emitted when a QR code is received
-         * @event Client#code
-         * @param {string} code Code
-         */
-        this.emit(Events.CODE_RECEIVED, code);
-    });
-    const clickOnLinkWithPhoneButton = async () => {
-        await page.waitForSelector(LINK_WITH_PHONE_BUTTON, { timeout: 0 });                    
-        await page.click(LINK_WITH_PHONE_BUTTON);
-    };
+await page.exposeFunction('codeChanged', async (code) => {
+/**
+ * Emitted when a QR code is received
+ * @event Client#code
+ * @param {string} code Code
+ */
+this.emit(Events.CODE_RECEIVED, code);
+});
+const clickOnLinkWithPhoneButton = async () => {
+await page.waitForSelector(LINK_WITH_PHONE_BUTTON, { timeout: 0 });
+await page.click(LINK_WITH_PHONE_BUTTON);
+};
 
-    const typePhoneNumber = async () => {
-        await page.waitForSelector(PHONE_NUMBER_INPUT);
-        const inputValue = await page.$eval(PHONE_NUMBER_INPUT, el => el.value);
-        await page.click(PHONE_NUMBER_INPUT);
-        for (let i = 0; i < inputValue.length; i++) {
-            await page.keyboard.press('Backspace');
-        }
-        await page.type(PHONE_NUMBER_INPUT, this.options.linkingMethod.phone.number);
-    };
+const typePhoneNumber = async () => {
+await page.waitForSelector(PHONE_NUMBER_INPUT);
+const inputValue = await page.$eval(PHONE_NUMBER_INPUT, el => el.value);
+await page.click(PHONE_NUMBER_INPUT);
+for (let i = 0; i < inputValue.length; i++) {
+await page.keyboard.press('Backspace');
+}
+await page.type(PHONE_NUMBER_INPUT, this.options.linkingMethod.phone.number);
+};
 
-    await clickOnLinkWithPhoneButton();
-    await typePhoneNumber();
-    await page.click(NEXT_BUTTON);
-      
-    await page.evaluate(async function (selectors) {
-        function waitForElementToExist(selector, timeout = 60000) {
-            return new Promise((resolve, reject) => {
-                if (document.querySelector(selector)) {
-                    return resolve(document.querySelector(selector));
-                }
+await clickOnLinkWithPhoneButton();
+await typePhoneNumber();
+await page.click(NEXT_BUTTON);
 
-                const observer = new MutationObserver(() => {
-                    if (document.querySelector(selector)) {
-                        resolve(document.querySelector(selector));
-                        observer.disconnect();
-                    }
-                });
+await page.evaluate(async function (selectors) {
+function waitForElementToExist(selector, timeout = 60000) {
+return new Promise((resolve, reject) => {
+if (document.querySelector(selector)) {
+return resolve(document.querySelector(selector));
+}
 
-                observer.observe(document.body, {
-                    subtree: true,
-                    childList: true,
-                });
+const observer = new MutationObserver(() => {
+if (document.querySelector(selector)) {
+resolve(document.querySelector(selector));
+observer.disconnect();
+}
+});
 
-                if (timeout > 0) {
-                    setTimeout(() => {
-                        reject(
-                            new Error(
-                                `waitForElementToExist: ${selector} not found in time`
-                            )
-                        );
-                    }, timeout);
-                }
-            });
-        }
+observer.observe(document.body, {
+subtree: true,
+childList: true,
+});
 
-        await waitForElementToExist(selectors.CODE_CONTAINER);
+if (timeout > 0) {
+setTimeout(() => {
+reject(
+new Error(
+`waitForElementToExist: ${selector} not found in time`
+)
+);
+}, timeout);
+}
+});
+}
 
-        const getCode = () => {
-            const codeContainer = document.querySelector(selectors.CODE_CONTAINER);
-            const code = Array.from(codeContainer.children)[0];
+await waitForElementToExist(selectors.CODE_CONTAINER);
 
-            const cells = Array.from(code.children);
-            return cells.map((cell) => cell.textContent).join('');
-        };
+const getCode = () => {
+const codeContainer = document.querySelector(selectors.CODE_CONTAINER);
+const code = Array.from(codeContainer.children)[0];
 
-        let code = getCode();
+const cells = Array.from(code.children);
+return cells.map((cell) => cell.textContent).join('');
+};
 
-        window.codeChanged(code);
+let code = getCode();
 
-        const entirePageObserver = new MutationObserver(() => {
-            const generateNewCodeButton = document.querySelector(selectors.GENERATE_NEW_CODE_BUTTON);
-            if (generateNewCodeButton) {
-                generateNewCodeButton.click();
-                return;
-            }
-        });
-        entirePageObserver.observe(document, {
-            subtree: true,
-            childList: true,
-        });
-        
-        const linkWithPhoneView = document.querySelector(selectors.LINK_WITH_PHONE_VIEW);
-        const linkWithPhoneViewObserver = new MutationObserver(() => {
-            const newCode = getCode();
-            if (newCode !== code) {
-                window.codeChanged(newCode);
-                code = newCode;
-            }
-        });
-        linkWithPhoneViewObserver.observe(linkWithPhoneView, {
-            subtree: true,
-            childList: true,
-        });
+window.codeChanged(code);
 
-    }, {
-        CODE_CONTAINER,
-        GENERATE_NEW_CODE_BUTTON,
-        LINK_WITH_PHONE_VIEW
-    });
+const entirePageObserver = new MutationObserver(() => {
+const generateNewCodeButton = document.querySelector(selectors.GENERATE_NEW_CODE_BUTTON);
+if (generateNewCodeButton) {
+generateNewCodeButton.click();
+return;
+}
+});
+entirePageObserver.observe(document, {
+subtree: true,
+childList: true,
+});
+
+const linkWithPhoneView = document.querySelector(selectors.LINK_WITH_PHONE_VIEW);
+const linkWithPhoneViewObserver = new MutationObserver(() => {
+const newCode = getCode();
+if (newCode !== code) {
+window.codeChanged(newCode);
+code = newCode;
+}
+});
+linkWithPhoneViewObserver.observe(linkWithPhoneView, {
+subtree: true,
+childList: true,
+});
+
+}, {
+CODE_CONTAINER,
+GENERATE_NEW_CODE_BUTTON,
+LINK_WITH_PHONE_VIEW
+});
 };
 
 const { linkingMethod } = this.options;
 
 if (linkingMethod.isQR()) {
-    await handleLinkWithQRCode();
+await handleLinkWithQRCode();
 } else {
-    await handleLinkWithPhoneNumber();
+await handleLinkWithPhoneNumber();
 }
 
 // Wait for code scan
@@ -957,41 +957,49 @@ await this.destroy();
 });
 }
 
-async initWebVersionCache() {
-    const { type: webCacheType, ...webCacheOptions } = this.options.webVersionCache;
-    const webCache = WebCacheFactory.createWebCache(webCacheType, webCacheOptions);
-  
-    const requestedVersion = this.options.webVersion;
-    const versionContent = await webCache.resolve(requestedVersion);
-  
-    if (versionContent) {
-      await this.mPage.route(WhatsWebURL, (route) => {
-        route.fulfill({
-          status: 200,
-          contentType: 'text/html',
-          body: versionContent,
-        });
-      });
-    } else {
-      this.mPage.on('response', async (res) => {
-        if (res.ok() && res.url() === WhatsWebURL) {
-          await webCache.persist(await res.text());
-        }
-      });
-    }
-  }
-  
+/*
+ * MywaJS 2023
+ * Update function by Amirul Dev
+ */
 
-/**
- * Closes the client
+
+/*
+ * Version web cache
+ */
+async initWebVersionCache() {
+const { type: webCacheType, ...webCacheOptions } = this.options.webVersionCache;
+const webCache = WebCacheFactory.createWebCache(webCacheType, webCacheOptions);
+
+const requestedVersion = this.options.webVersion;
+const versionContent = await webCache.resolve(requestedVersion);
+
+if (versionContent) {
+await this.mPage.route(WhatsWebURL, (route) => {
+route.fulfill({
+status: 200,
+contentType: 'text/html',
+body: versionContent,
+});
+});
+} else {
+this.mPage.on('response', async (res) => {
+if (res.ok() && res.url() === WhatsWebURL) {
+await webCache.persist(await res.text());
+}
+});
+}
+}
+
+/*
+ * Close client
  */
 async destroy() {
 await this.mBrowser.close();
 await this.authStrategy.destroy();
 }
 
-/**
- * Logs out the client, closing the current session
+/*
+ * Logout client
  */
 async logout() {
 await this.mPage.evaluate(() => {
@@ -1008,21 +1016,22 @@ maxDelay++;
 await this.authStrategy.logout();
 }
 
-/**
- * Returns the version of WhatsApp Web currently being run
- * @returns {Promise<string>}
+/*
+ * Get version wweb
  */
-async getWWebVersion() {
+async getWWeb() {
 return await this.mPage.evaluate(() => {
-return window.Debug.VERSION;
+var res = {
+version: window.Debug.VERSION,
+desktop_beta: window.Debug.DESKTOP_BETA,
+id: window.Debug.BUILD_ID,
+};
+return res;
 });
 }
 
-/**
- * Mark as seen for the Chat
- *@param {string} chatId
- *@returns {Promise<boolean>} result
- * 
+/*
+ * Read this message
  */
 async sendSeen(chatId) {
 const result = await this.mPage.evaluate(async (chatId) => {
@@ -1032,71 +1041,60 @@ return window.WWebJS.sendSeen(chatId);
 return result;
 }
 
-/**
- * Message options.
- * @typedef {Object} MessageSendOptions
- * @property {boolean} [linkPreview=true] - Show links preview. Has no effect on multi-device accounts.
- * @property {boolean} [sendAudioAsVoice=false] - Send audio as voice message with a generated waveform
- * @property {boolean} [sendVideoAsGif=false] - Send video as gif
- * @property {boolean} [sendMediaAsSticker=false] - Send media as a sticker
- * @property {boolean} [sendMediaAsDocument=false] - Send media as a document
- * @property {boolean} [isViewOnce=false] - Send photo/video as a view once message
- * @property {boolean} [parseVCards=true] - Automatically parse vCards and send them as contacts
- * @property {string} [caption] - Image or video caption
- * @property {string} [quotedMessageId] - Id of the message that is being quoted (or replied to)
- * @property {Contact[]} [mentions] - Contacts that are being mentioned in the message
- * @property {boolean} [sendSeen=true] - Mark the conversation as seen after sending the message
- * @property {string} [stickerAuthor=undefined] - Sets the author of the sticker, (if sendMediaAsSticker is true).
- * @property {string} [stickerName=undefined] - Sets the name of the sticker, (if sendMediaAsSticker is true).
- * @property {string[]} [stickerCategories=undefined] - Sets the categories of the sticker, (if sendMediaAsSticker is true). Provide emoji char array, can be null.
- * @property {MessageMedia} [media] - Media to be sent
- */
-
-/**
- * Send a message to a specific chatId
- * @param {string} chatId
- * @param {string|MessageMedia|Location|Contact|Array<Contact>|Buttons|List} content
- * @param {MessageSendOptions} [options] - Options used when sending the message
- * 
- * @returns {Promise<Message>} Message that was just sent
+/*
+ * Send message
+ * param:
+ * jid (string)
+ * content (string/url/buffer)
+ * options
  */
 async sendMessage(chatId, content, options = {}) {
-if (options.mentions && options.mentions.some(possiblyContact => possiblyContact instanceof Contact)) {
-console.warn('Mentions with an array of Contact are now deprecated. See more at https://github.com/pedroslopez/whatsapp-web.js/pull/2166.');
-options.mentions = options.mentions.map(a => a.id._serialized);
-}
 let internalOptions = {
-linkPreview: options.linkPreview === false ? undefined : true,
-sendAudioAsVoice: options.sendAudioAsVoice,
-sendVideoAsGif: options.sendVideoAsGif,
-sendMediaAsSticker: options.sendMediaAsSticker,
-sendMediaAsDocument: options.sendMediaAsDocument,
+linkPreview: options.linkPreview,
+sendAudioAsVoice: options.ptt,
+sendVideoAsGif: options.gifPlayBack,
+sendMediaAsSticker: options.asSticker,
+sendMediaAsDocument: options.asDocument,
+sendAsViewOnce: options.isViewOnce,
+wavefrom: options.wavefrom,
 caption: options.caption,
-quotedMessageId: options.quotedMessageId,
+quotedMessageId: options.quoted?.id ? (options.quoted._serialized || options.quoted.id._serialized) : options.quoted,
 parseVCards: options.parseVCards === false ? false : true,
-mentionedJidList: Array.isArray(options.mentions) ? options.mentions : [],
+mentionedJidList: Array.isArray(options.mentions) ? options.mentions.map(contact => (contact?.id ? contact?.id?._serialized : contact)) : [],
 extraOptions: options.extra
 };
 
+if (options.caption) internalOptions.caption = options.caption
 const sendSeen = typeof options.sendSeen === 'undefined' ? true : options.sendSeen;
 
-if (content instanceof MessageMedia) {
+if ((Buffer.isBuffer(content) || /^data:.?\/.?;base64,/i.test(content) || /^https?:\/\//.test(content) || Fs.existsSync(content))) {
+let media = await Util.getFile(content)
+if (!options.mimetype && media?.ext === '.bin') {
+content = content
+} else {
+internalOptions.attachment = {
+mimetype: options.mimetype ? options.mimetype : media.mime,
+data: media?.data?.toString('base64') || Util.bufferToBase64(media.data),
+filename: options.fileName ? options.fileName : Util.getRandom(media.ext),
+filesize: options.fileSize ? options.fileSize : media.size
+}
+content = ''
+}
+} else if (content instanceof MessageMedia) {
 internalOptions.attachment = content;
-internalOptions.isViewOnce = options.isViewOnce,
 content = '';
 } else if (options.media instanceof MessageMedia) {
 internalOptions.attachment = options.media;
 internalOptions.caption = content;
-internalOptions.isViewOnce = options.isViewOnce,
 content = '';
 } else if (content instanceof Location) {
 internalOptions.location = content;
 content = '';
 } else if (content instanceof Contact) {
-internalOptions.contactCard = content.id._serialized;
+internalOptions.contactCard = (content.id ? content.id._serialized : content);
 content = '';
 } else if (Array.isArray(content) && content.length > 0 && content[0] instanceof Contact) {
-internalOptions.contactCardList = content.map(contact => contact.id._serialized);
+internalOptions.contactCardList = content.map(contact => (contact.id ? contact.id._serialized : contact));
 content = '';
 } else if (content instanceof Buttons) {
 if (content.type !== 'chat') { internalOptions.attachment = content.body; }
@@ -1110,14 +1108,20 @@ content = '';
 if (internalOptions.sendMediaAsSticker && internalOptions.attachment) {
 internalOptions.attachment = await Util.formatToWebpSticker(
 internalOptions.attachment, {
-name: options.stickerName,
-author: options.stickerAuthor,
-categories: options.stickerCategories
+packId: options?.packId ? options.packId : global?.Exif?.packId,
+packName: options?.packName ? options.packName : global?.Exif?.packName,
+packPublish: options?.packPublish ? options.packPublish : global?.Exif?.packPublish,
+packEmail: options?.packEmail ? options.packEmail : global?.Exif?.packEmail,
+packWebsite: options?.packWebsite ? options.packWebsite : global?.Exif?.packWebsite,
+androidApp: options?.androidApp ? options.androidApp : global?.Exif?.androidApp,
+iOSApp: options?.iOSApp ? options.iOSApp : global?.Exif?.iOSApp,
+categories: options?.categories ? options.categories : global?.Exif?.categories,
+isAvatar: options?.isAvatar ? options.isAvatar : global?.Exif?.isAvatar
 }, this.mPage
 );
 }
 
-const newMessage = await this.mPage.evaluate(async (chatId, message, options, sendSeen) => {
+const newMessage = await this.mPage.evaluate(async ({ chatId, message, options, sendSeen }) => {
 const chatWid = window.Store.WidFactory.createWid(chatId);
 const chat = await window.Store.Chat.find(chatWid);
 
@@ -1128,9 +1132,9 @@ window.WWebJS.sendSeen(chatId);
 
 const msg = await window.WWebJS.sendMessage(chat, message, options, sendSeen);
 return msg.serialize();
-}, chatId, content, internalOptions, sendSeen);
+}, { chatId, message: content, options: internalOptions, sendSeen });
 
-return new Message(this, newMessage);
+if (newMessage) return new Message(this, newMessage)
 }
 
 /**
