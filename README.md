@@ -17,7 +17,7 @@
 
 ```
 it's the wwebjs library redeveloped using
-playwright and wpp.
+playwright and wajs.
 because in my opinion playwright is lighter.
 This is an unofficial library,
 doesn't mean it's anti-banned.
