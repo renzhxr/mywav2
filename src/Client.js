@@ -206,7 +206,7 @@ isBeta: this.options.isBeta,
 }
 )
 .catch(() => false);
-
+/*
 await page.evaluate(`function getElementByXpath(path) {
 return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }`);
@@ -252,7 +252,46 @@ PROGRESS: '//*[@id=\'app\']/div/div/div[2]/progress',
 PROGRESS_MESSAGE: '//*[@id=\'app\']/div/div/div[3]',
 }
 );
+*/
 
+await page.evaluate(() => {
+    function getElementByXpath(path) {
+      return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    }
+  
+    let lastPercent = null;
+    let lastPercentMessage = null;
+  
+    window.loadingScreen = async (percent, message) => {
+      if (lastPercent !== percent || lastPercentMessage !== message) {
+        this.emit(Events.LOADING_SCREEN, percent, message);
+        lastPercent = percent;
+        lastPercentMessage = message;
+      }
+    };
+  
+    const selectors = {
+      PROGRESS: '//*[@id=\'app\']/div/div/div[2]/progress',
+      PROGRESS_MESSAGE: '//*[@id=\'app\']/div/div/div[3]',
+    };
+  
+    const observer = new MutationObserver(() => {
+      let progressBar = getElementByXpath(selectors.PROGRESS);
+      let progressMessage = getElementByXpath(selectors.PROGRESS_MESSAGE);
+  
+      if (progressBar) {
+        window.loadingScreen(progressBar.value, progressMessage.innerText);
+      }
+    });
+  
+    observer.observe(document, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  });
+  
 const INTRO_IMG_SELECTOR = '[data-testid="intro-md-beta-logo-dark"], [data-testid="intro-md-beta-logo-light"], [data-asset-intro-image-light="true"], [data-asset-intro-image-dark="true"]';
 const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
