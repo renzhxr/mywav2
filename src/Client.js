@@ -243,7 +243,7 @@ class Client extends EventEmitter {
             timeout: 0,
             referer: 'https://whatsapp.com/'
         });
-
+/*
         await page.addScriptTag({
             path: require.resolve("@wppconnect/wa-js"),
         });
@@ -274,7 +274,7 @@ class Client extends EventEmitter {
             WPP.conn.setLimit('statusVideoMaxDuration', 120)
             WPP.conn.setLimit('unlimitedPin', true);
         })
-
+*/
         await page.evaluate(`function getElementByXpath(path) {
 return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }`);
