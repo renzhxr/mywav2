@@ -7,7 +7,7 @@
  * ig: amirul.dev
  */
 
-import Base from './Base.js'
+import Base from './Base.js';
 
 class ProductMetadata extends Base {
     constructor(client, data) {

@@ -6,19 +6,26 @@
  * wa: 085157489446
  * ig: amirul.dev
  */
-
 'use strict';
 
 import path from 'path';
 import Crypto from "crypto";
-import { tmpdir } from 'os';
+import {
+    tmpdir
+} from 'os';
 import ffmpeg from 'fluent-ffmpeg';
 import webp from 'node-webpmux';
-import { Readable } from 'stream'
+import {
+    Readable
+} from 'stream'
 import fs from 'fs/promises';
 import Fs from 'fs';
 import axios from 'axios';
-import { fileTypeFromBuffer } from "file-type"
+import BodyForm from "form-data";
+import {
+    fileTypeFromBuffer
+} from "file-type"
+import mimes from "mime-types"
 
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
@@ -54,12 +61,19 @@ class Util {
     }
 
     static formatSize(bytes) {
-        if (bytes >= 1000000000) { bytes = (bytes / 1000000000).toFixed(2) + " GB"; }
-        else if (bytes >= 1000000) { bytes = (bytes / 1000000).toFixed(2) + " MB"; }
-        else if (bytes >= 1000) { bytes = (bytes / 1000).toFixed(2) + " KB"; }
-        else if (bytes > 1) { bytes = bytes + " bytes"; }
-        else if (bytes == 1) { bytes = bytes + " byte"; }
-        else { bytes = "0 bytes"; }
+        if (bytes >= 1000000000) {
+            bytes = (bytes / 1000000000).toFixed(2) + " GB";
+        } else if (bytes >= 1000000) {
+            bytes = (bytes / 1000000).toFixed(2) + " MB";
+        } else if (bytes >= 1000) {
+            bytes = (bytes / 1000).toFixed(2) + " KB";
+        } else if (bytes > 1) {
+            bytes = bytes + " bytes";
+        } else if (bytes == 1) {
+            bytes = bytes + " byte";
+        } else {
+            bytes = "0 bytes";
+        }
         return bytes;
     }
 
@@ -153,7 +167,7 @@ class Util {
             `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`
         );
 
-        const stream = new (require('stream').Readable)();
+        const stream = new Readable();
         const buffer = Buffer.from(
             media.data.replace(`data:${media.mimetype};base64,`, ''),
             'base64'
@@ -235,21 +249,21 @@ class Util {
             const hash = this.generateHash(32);
             const json = {
                 "sticker-pack-id": metadata.packId ? metadata.packId : hash,
-                "sticker-pack-name": metadata.packName
-                    ? metadata.packName
-                    : "MywaJS",
-                "sticker-pack-publisher": metadata.packPublish
-                    ? metadata.packPublish
-                    : "Amirul Dev",
-                "sticker-pack-publisher-email": metadata.packEmail
-                    ? metadata.packEmail
-                    : "",
-                "sticker-pack-publisher-website": metadata.packWebsite
-                    ? metadata.packWebsite
-                    : "https://instagram.com/amirul.dev",
-                "android-app-store-link": metadata.androidApp
-                    ? metadata.androidApp
-                    : "",
+                "sticker-pack-name": metadata.packName ?
+                    metadata.packName :
+                    "MywaJS",
+                "sticker-pack-publisher": metadata.packPublish ?
+                    metadata.packPublish :
+                    "Amirul Dev",
+                "sticker-pack-publisher-email": metadata.packEmail ?
+                    metadata.packEmail :
+                    "",
+                "sticker-pack-publisher-website": metadata.packWebsite ?
+                    metadata.packWebsite :
+                    "https://instagram.com/amirul.dev",
+                "android-app-store-link": metadata.androidApp ?
+                    metadata.androidApp :
+                    "",
                 "ios-app-store-link": metadata.iOSApp ? metadata.iOSApp : "",
                 emojis: metadata.categories ? metadata.categories : [],
                 "is-avatar-sticker": metadata.isAvatar ? metadata.isAvatar : 0,
@@ -276,6 +290,140 @@ class Util {
     static setFfmpegPath(path) {
         ffmpeg.setFfmpegPath(path);
     }
+
+    /* fetch buffer */
+    static fetchBuffer(string, options = {}) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (/^https?:\/\//i.test(string)) {
+                    let data = await axios.get(string, {
+                        headers: {
+                            ...(!!options.headers ? options.headers : {}),
+                        },
+                        responseType: "arraybuffer",
+                        ...options,
+                    })
+                    let buffer = await data?.data
+                    let name = /filename/i.test(data.headers?.get("content-disposition")) ? data.headers?.get("content-disposition")?.match(/filename=(.*)/)?.[1]?.replace(/["';]/g, '') : ''
+                    let mime = mimes.lookup(name) || data.headers.get("content-type") || (await fileTypeFromBuffer(buffer))?.mime
+                    resolve({
+                        data: buffer,
+                        size: Buffer.byteLength(buffer),
+                        sizeH: this.formatSize(Buffer.byteLength(buffer)),
+                        name,
+                        mime,
+                        ext: mimes.extension(mime)
+                    });
+                } else if (/^data:.*?\/.*?;base64,/i.test(string)) {
+                    let data = Buffer.from(string.split`,` [1], "base64")
+                    let size = Buffer.byteLength(data)
+                    resolve({
+                        data,
+                        size,
+                        sizeH: this.formatSize(size),
+                        ...((await fileTypeFromBuffer(data)) || {
+                            mime: "application/octet-stream",
+                            ext: ".bin"
+                        })
+                    });
+                } else if (Fs.existsSync(string) && Fs.statSync(string).isFile()) {
+                    let data = Fs.readFileSync(string)
+                    let size = Buffer.byteLength(data)
+                    resolve({
+                        data,
+                        size,
+                        sizeH: this.formatSize(size),
+                        ...((await fileTypeFromBuffer(data)) || {
+                            mime: "application/octet-stream",
+                            ext: ".bin"
+                        })
+                    });
+                } else if (Buffer.isBuffer(string)) {
+                    let size = Buffer?.byteLength(string) || 0
+                    resolve({
+                        data: string,
+                        size,
+                        sizeH: this.formatSize(size),
+                        ...((await fileTypeFromBuffer(string)) || {
+                            mime: "application/octet-stream",
+                            ext: ".bin"
+                        })
+                    });
+                } else if (/^[a-zA-Z0-9+/]={0,2}$/i.test(string)) {
+                    let data = Buffer.from(string, "base64")
+                    let size = Buffer.byteLength(data)
+                    resolve({
+                        data,
+                        size,
+                        sizeH: this.formatSize(size),
+                        ...((await fileTypeFromBuffer(data)) || {
+                            mime: "application/octet-stream",
+                            ext: ".bin"
+                        })
+                    });
+                } else {
+                    let buffer = Buffer.alloc(20)
+                    let size = Buffer.byteLength(buffer)
+                    resolve({
+                        data: buffer,
+                        size,
+                        sizeH: this.formatSize(size),
+                        ...((await fileTypeFromBuffer(buffer)) || {
+                            mime: "application/octet-stream",
+                            ext: ".bin"
+                        })
+                    });
+                }
+            } catch (e) {
+                reject(new Error(e?.message || e))
+            }
+        });
+    }
+
+    /* get file */
+    static async getFile(PATH, save, options = {}) {
+        try {
+            options = !!options.headers ? options.headers : {}
+            let filename = null;
+            let data = (await this.fetchBuffer(PATH, { headers: {
+                referer: 'https://y2mate.com'
+                }}))
+
+            if (data?.data && save) {
+                filename = `../../temp/${Date.now()}.${data.ext}`
+                Fs.promises.writeFile(filename, data?.data);
+            }
+            return {
+                filename: data?.name ? data.name : filename,
+                ...data
+            };
+        } catch (e) {
+            throw e
+        }
+    }
+    
+    /* upload media */
+    static upload(buffer, exts) {
+		return new Promise(async (resolve, reject) => {
+			const { ext, data: buffers } = await this.getFile(buffer)
+			const form = new BodyForm();
+			form.append("files[]", buffers, this.getRandom(exts || ext))
+			await axios({
+				url: "https://pomf.lain.la/upload.php",
+				method: "POST",
+				headers: {
+					"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+					...form.getHeaders()
+				},
+				data: form
+			}).then((data) => {
+				resolve(data.data.files[0])
+			}).catch((err) => resolve(err))
+		})
+	}
+
+
+
 }
 
 export default Util;

@@ -9,7 +9,7 @@
 
 'use strict';
 
-import BaseAuthStrategy from "./BaseAuthStrategy.js"
+import BaseAuthStrategy from './BaseAuthStrategy.js'
 
 /**
  * Legacy session auth strategy
@@ -23,14 +23,14 @@ import BaseAuthStrategy from "./BaseAuthStrategy.js"
  * @param {string} options.session.WAToken2
  */
 class LegacySessionAuth extends BaseAuthStrategy {
-    constructor({ session, restartOnAuthFail }={}) {
+    constructor({ session, restartOnAuthFail } = {}) {
         super();
         this.session = session;
         this.restartOnAuthFail = restartOnAuthFail;
     }
 
     async afterBrowserInitialized() {
-        if(this.session) {
+        if (this.session) {
             await this.client.mPage.evaluateOnNewDocument(session => {
                 if (document.referrer === 'https://whatsapp.com/') {
                     localStorage.clear();
@@ -39,14 +39,14 @@ class LegacySessionAuth extends BaseAuthStrategy {
                     localStorage.setItem('WAToken1', session.WAToken1);
                     localStorage.setItem('WAToken2', session.WAToken2);
                 }
-  
+
                 localStorage.setItem('remember-me', 'true');
             }, this.session);
         }
     }
 
     async onAuthenticationNeeded() {
-        if(this.session) {
+        if (this.session) {
             this.session = null;
             return {
                 failed: true,
@@ -63,7 +63,7 @@ class LegacySessionAuth extends BaseAuthStrategy {
             return window.Store.MDBackend;
         });
 
-        if(isMD) throw new Error('Authenticating via JSON session is not supported for MultiDevice-enabled WhatsApp accounts.');
+        if (isMD) throw new Error('Authenticating via JSON session is not supported for MultiDevice-enabled WhatsApp accounts.');
 
         const localStorage = JSON.parse(await this.client.mPage.evaluate(() => {
             return JSON.stringify(window.localStorage);

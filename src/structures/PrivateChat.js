@@ -9,7 +9,7 @@
 
 'use strict';
 
-import Chat from './Chat.js'
+import Chat from './Chat.js';
 
 /**
  * Represents a Private Chat on WhatsApp

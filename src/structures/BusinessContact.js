@@ -9,7 +9,7 @@
 
 'use strict';
 
-import Contact from './Contact.js'
+import Contact from "./Contact.js";
 
 /**
  * Represents a Business Contact on WhatsApp

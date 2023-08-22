@@ -9,8 +9,8 @@
 
 'use strict';
 
-import Base from './Base.js'
-import Product from './Product.js'
+import Base from './Base.js';
+import Product from './Product.js';
 
 /**
  * Represents a Order on WhatsApp
@@ -54,8 +54,6 @@ class Order extends Base {
 
         return super._patch(data);
     }
-
-
 }
 
 export default Order;

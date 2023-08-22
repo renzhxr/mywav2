@@ -9,8 +9,8 @@
 
 'use strict';
 
-import Base from './Base.js'
-import ProductMetadata from './ProductMetadata.js'
+import Base from './Base.js';
+import ProductMetadata from './ProductMetadata.js';
 
 /**
  * Represents a Product on WhatsAppBusiness

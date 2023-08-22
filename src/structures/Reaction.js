@@ -9,7 +9,7 @@
 
 'use strict';
 
-import Base from './Base.js'
+import Base from './Base.js';
 
 /**
  * Represents a Reaction on WhatsApp

@@ -82,7 +82,6 @@ class Payment extends Base {
 
         return super._patch(data);
     }
-
 }
 
 export default Payment;

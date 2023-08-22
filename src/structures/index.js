@@ -29,4 +29,4 @@ export { default as List } from './List.js';
 export { default as Payment } from './Payment.js';
 export { default as PollVote } from './PollVote.js';
 export { default as Reaction } from './Reaction.js';
-export { default as LinkingMethod } from '../LinkingMethod.js'
+export { default as LinkingMethod } from './LinkingMethod.js'

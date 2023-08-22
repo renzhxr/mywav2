@@ -8,9 +8,10 @@
  */
 
 'use strict';
+
 export { default as Client } from './src/Client.js';
 
-/* structures */
+// Structures
 export {
     Chat,
     PrivateChat,
@@ -30,7 +31,7 @@ export {
     LinkingMethod
 } from './src/structures/index.js';
 
-/* auth strategies */
+// Auth Strategies
 export { default as NoAuth } from './src/authStrategies/NoAuth.js'
 export { default as LocalAuth } from './src/authStrategies/LocalAuth.js'
 export { default as RemoteAuth } from './src/authStrategies/RemoteAuth.js'

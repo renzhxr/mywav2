@@ -1,6 +1,6 @@
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#table-of-contents)
 # MYWAJS
-[COMMUNITY - CLICK HERE](https://chat.whatsapp.com/BIHE3USWr4lAnahwJTQEOX) - [DOCS MYWAJS - CLICK HERE](https://github.com/amiruldev20/mywajs/blob/v2/docs/home.md)
+[COMMUNITY - CLICK HERE](https://chat.whatsapp.com/BIHE3USWr4lAnahwJTQEOX) - [DOCS MYWAJS - CLICK HERE](https://mywajs.amirull.dev)
 
  > *NB*: this is whatsapp-web.js fork with features from wajs wpp. Previously, permits had been granted by WPP
  
@@ -34,3 +34,15 @@ docs? check folder docs
 | Login via phone | ✅ |
 | Multi Device | ✅ |
 | Join Wa Beta | ✅ |
+| Change theme | ✅ |
+| Send polling | ✅ |
+| Read story | ✅ |
+| Get story | ✅ |
+| Send call | ✅ |
+| Accept call | ✅ |
+| Reject call | ✅ |
+| Screenshot whatsapp web | ✅ |
+| Screenshot custom url | ✅ |
+| Get member request | ✅ |
+| Accept member request | ✅ |
+| Reject member request | ✅ |
