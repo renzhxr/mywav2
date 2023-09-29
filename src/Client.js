@@ -314,7 +314,16 @@ class Client extends EventEmitter {
         });
 
 
-        const INTRO_IMG_SELECTOR = '[data-icon=\'chat\']';
+        const INTRO_IMG_SELECTOR =
+      this.options.selector == 1
+        ? "div[role='textbox']"
+        : this.options.selector == 2
+        ? '[data-icon="chat"],[data-icon="intro-md-beta-logo-dark"],[data-icon="intro-md-beta-logo-light"]'
+        : this.options.selector == 3
+        ? "[data-icon='chat']"
+        : this.options.selector == 4
+        ? `['[data-icon*=community]', '[data-icon*=status]', '[data-icon*=community]', '[data-icon*=chat]', '[data-icon*=back]', '[data-icon*=search]', '[data-icon*=filter]', '[data-icon*=lock-small]', '[data-icon*=chat]']`
+        : "[data-icon='search']";
         const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
         // Checks which selector appears first
