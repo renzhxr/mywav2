@@ -6,482 +6,487 @@
  * wa: 085157489446
  * ig: amirul.dev
  */
-
-import { EventEmitter } from "events";
-import { AxiosInterceptorOptions } from "axios";
+import {
+  EventEmitter
+} from "events";
+import {
+  AxiosInterceptorOptions
+} from "axios";
 import * as playwright from "playwright-chromium";
 import PollVote from "./src/structures/PollVote.js";
 
 declare namespace WAWebJS {
   export class Client extends EventEmitter {
-    constructor(options: ClientOptions);
+      constructor(options: ClientOptions);
 
-    /** Current connection information */
-    public info: ClientInfo;
+      /** Current connection information */
+      public info: ClientInfo;
 
-    /** playwright page running WhatsApp Web */
-    mPage?: playwright.Page;
+      /** playwright page running WhatsApp Web */
+      mPage ? : playwright.Page;
 
-    /** playwright browser running WhatsApp Web */
-    pupBrowser?: playwright.Browser;
+      /** playwright browser running WhatsApp Web */
+      pupBrowser ? : playwright.Browser;
 
-    /**Accepts an invitation to join a group */
-    acceptInvite(inviteCode: string): Promise<string>;
+      /**Accepts an invitation to join a group */
+      acceptInvite(inviteCode: string): Promise < string > ;
 
-    /**Returns an object with information about the invite code's group */
-    getInviteInfo(inviteCode: string): Promise<object>;
+      /**Returns an object with information about the invite code's group */
+      getInviteInfo(inviteCode: string): Promise < object > ;
 
-    /** Enables and returns the archive state of the Chat */
-    archiveChat(chatId: string): Promise<boolean>;
+      /** Enables and returns the archive state of the Chat */
+      archiveChat(chatId: string): Promise < boolean > ;
 
-    /** Pins the Chat and returns its new Pin state */
-    pinChat(chatId: string): Promise<boolean>;
+      /** Pins the Chat and returns its new Pin state */
+      pinChat(chatId: string): Promise < boolean > ;
 
-    /** Unpins the Chat and returns its new Pin state */
-    unpinChat(chatId: string): Promise<boolean>;
+      /** Unpins the Chat and returns its new Pin state */
+      unpinChat(chatId: string): Promise < boolean > ;
 
-    /**
-     * Create a new group
-     * @param name group title
-     * @param participants an array of Contacts or contact IDs to add to the group
-     */
-    createGroup(
-      name: string,
-      participants: Contact[] | string[]
-    ): Promise<CreateGroupResult>;
+      /**
+       * Create a new group
+       * @param name group title
+       * @param participants an array of Contacts or contact IDs to add to the group
+       */
+      createGroup(
+          name: string,
+          participants: Contact[] | string[]
+      ): Promise < CreateGroupResult > ;
 
-    /** Closes the client */
-    destroy(): Promise<void>;
+      /** Closes the client */
+      destroy(): Promise < void > ;
 
-    /** Logs out the client, closing the current session */
-    logout(): Promise<void>;
+      /** Logs out the client, closing the current session */
+      logout(): Promise < void > ;
 
-    /** Get all blocked contacts by host account */
-    getBlockedContacts(): Promise<Contact[]>;
+      /** Get all blocked contacts by host account */
+      getBlockedContacts(): Promise < Contact[] > ;
 
-    /** Get chat instance by ID */
-    getChatById(chatId: string): Promise<Chat>;
+      /** Get chat instance by ID */
+      getChatById(chatId: string): Promise < Chat > ;
 
-    /** Get all current chat instances */
-    getChats(): Promise<Chat[]>;
+      /** Get all current chat instances */
+      getChats(): Promise < Chat[] > ;
 
-    /** Get contact instance by ID */
-    getContactById(contactId: string): Promise<Contact>;
+      /** Get contact instance by ID */
+      getContactById(contactId: string): Promise < Contact > ;
 
-    /** Get all current contact instances */
-    getContacts(): Promise<Contact[]>;
+      /** Get all current contact instances */
+      getContacts(): Promise < Contact[] > ;
 
-    /** Get the country code of a WhatsApp ID. (154185968@c.us) => (1) */
-    getCountryCode(number: string): Promise<string>;
+      /** Get the country code of a WhatsApp ID. (154185968@c.us) => (1) */
+      getCountryCode(number: string): Promise < string > ;
 
-    /** Get the formatted number of a WhatsApp ID. (12345678901@c.us) => (+1 (234) 5678-901) */
-    getFormattedNumber(number: string): Promise<string>;
+      /** Get the formatted number of a WhatsApp ID. (12345678901@c.us) => (+1 (234) 5678-901) */
+      getFormattedNumber(number: string): Promise < string > ;
 
-    /** Get all current Labels  */
-    getLabels(): Promise<Label[]>;
+      /** Get all current Labels  */
+      getLabels(): Promise < Label[] > ;
 
-    /** Get Label instance by ID */
-    getLabelById(labelId: string): Promise<Label>;
+      /** Get Label instance by ID */
+      getLabelById(labelId: string): Promise < Label > ;
 
-    /** Get all Labels assigned to a Chat */
-    getChatLabels(chatId: string): Promise<Label[]>;
+      /** Get all Labels assigned to a Chat */
+      getChatLabels(chatId: string): Promise < Label[] > ;
 
-    /** Get all Chats for a specific Label */
-    getChatsByLabelId(labelId: string): Promise<Chat[]>;
+      /** Get all Chats for a specific Label */
+      getChatsByLabelId(labelId: string): Promise < Chat[] > ;
 
-    /** Returns the contact ID's profile picture URL, if privacy settings allow it */
-    getProfilePicUrl(contactId: string): Promise<string>;
+      /** Returns the contact ID's profile picture URL, if privacy settings allow it */
+      getProfilePicUrl(contactId: string): Promise < string > ;
 
-    /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
-    getCommonGroups(contactId: string): Promise<ChatId[]>;
+      /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
+      getCommonGroups(contactId: string): Promise < ChatId[] > ;
 
-    /** Gets the current connection state for the client */
-    getState(): Promise<WAState>;
+      /** Gets the current connection state for the client */
+      getState(): Promise < WAState > ;
 
-    /** Returns the version of WhatsApp Web currently being run */
-    getWWebVersion(): Promise<string>;
+      /** Returns the version of WhatsApp Web currently being run */
+      getWWebVersion(): Promise < string > ;
 
-    /** Sets up events and requirements, kicks off authentication request */
-    initialize(): Promise<void>;
+      /** Sets up events and requirements, kicks off authentication request */
+      initialize(): Promise < void > ;
 
-    /** Check if a given ID is registered in whatsapp */
-    isRegisteredUser(contactId: string): Promise<boolean>;
+      /** Check if a given ID is registered in whatsapp */
+      isRegisteredUser(contactId: string): Promise < boolean > ;
 
-    /** Get the registered WhatsApp ID for a number. Returns null if the number is not registered on WhatsApp. */
-    getNumberId(number: string): Promise<ContactId | null>;
+      /** Get the registered WhatsApp ID for a number. Returns null if the number is not registered on WhatsApp. */
+      getNumberId(number: string): Promise < ContactId | null > ;
 
-    /**
-     * @param chatId ID of the chat that will be muted
-     * @param unmuteDate number, in the form of seconds for the duration of the muted chat
-     */
-    muteChat(chatId: string, unmuteDate?: number): Promise<void>;
+      /**
+       * @param chatId ID of the chat that will be muted
+       * @param unmuteDate number, in the form of seconds for the duration of the muted chat
+       */
+      muteChat(chatId: string, unmuteDate ? : number): Promise < void > ;
 
-    /**
-     * @param chatId ID of the chat that will be muted
-     * @param ephemeralDuration number, in the form of seconds for the duration of the temporary message in chat
-     */
-    setEphemeral(chatId: string, ephemeralDuration?: number): Promise<void>;
+      /**
+       * @param chatId ID of the chat that will be muted
+       * @param ephemeralDuration number, in the form of seconds for the duration of the temporary message in chat
+       */
+      setEphemeral(chatId: string, ephemeralDuration ? : number): Promise < void > ;
 
-    /** Force reset of connection state for the client */
-    resetState(): Promise<void>;
+      /** Force reset of connection state for the client */
+      resetState(): Promise < void > ;
 
-    /** Send a message to a specific chatId */
-    sendMessage(
-      chatId: string,
-      content: MessageContent,
-      options?: MessageSendOptions
-    ): Promise<Message>;
+      /** Send a message to a specific chatId */
+      sendMessage(
+          chatId: string,
+          content: MessageContent,
+          options ? : MessageSendOptions
+      ): Promise < Message > ;
 
-    /** Searches for messages */
-    searchMessages(
-      query: string,
-      options?: { chatId?: string; page?: number; limit?: number }
-    ): Promise<Message[]>;
+      /** Searches for messages */
+      searchMessages(
+          query: string,
+          options ? : {
+              chatId ? : string;page ? : number;limit ? : number
+          }
+      ): Promise < Message[] > ;
+
+      /** Marks the client as online */
+      sendPresenceAvailable(): Promise < void > ;
 
-    /** Marks the client as online */
-    sendPresenceAvailable(): Promise<void>;
-
-    /** Marks the client as offline */
-    sendPresenceUnavailable(): Promise<void>;
-
-    /** Mark as seen for the Chat */
-    sendSeen(chatId: string): Promise<boolean>;
-
-    /** Mark the Chat as unread */
-    markChatUnread(chatId: string): Promise<void>;
-
-    /**
-     * Sets the current user's status message
-     * @param status New status message
-     */
-    setStatus(status: string): Promise<void>;
-
-    /**
-     * Sets the current user's display name
-     * @param displayName New display name
-     */
-    setDisplayName(displayName: string): Promise<boolean>;
-
-    /** Changes and returns the archive state of the Chat */
-    unarchiveChat(chatId: string): Promise<boolean>;
-
-    /** Unmutes the Chat */
-    unmuteChat(chatId: string): Promise<void>;
-
-    /** Sets the current user's profile picture */
-    setProfilePicture(media: MessageMedia): Promise<boolean>;
-
-    /** Deletes the current user's profile picture */
-    deleteProfilePicture(): Promise<boolean>;
-
-    /** Send a call to someone */
-    sendCall(chatId: string, options: CallOptions): Promise<Boolean>;
-
-    /** Hang up the call in progress */
-    endCall(chatId: string): Promise<Boolean>;
-
-    /** Receive a phone call from someone */
-    acceptCall(chatId: string): Promise<Boolean>;
-
-    /** Displays last seen status (Conditions : No Privacy) */
-    getLastSeen(chatId: string): Promise<string | Boolean | Number>;
-
-    /** Archives or No all selected conversation, 'chat' or 'group' except pinned ones */
-    archiveAll(type: string, status: boolean): Promise<Boolean>;
-
-    /** Mute or No all selected conversation, 'chat' or 'group' except pinned ones */
-    muteAll(type: string, status: boolean): Promise<Boolean>;
-
-    /** Displays connection status */
-    getHost(): Promise<Object>;
-
-    /** Change the display theme 'light' or 'dark' */
-    setTheme(type: string): Promise<void>;
-
-    /** get display theme */
-    getTheme(): Promise<string>;
-
-    /** Delete all messages */
-    clearMessage(chatId: string): Promise<Boolean>;
-
-    /** fetch stories user */
-    getStories(chatId: string): Promise<Array>;
-
-    /** get contact by name */
-    getContactByName(name: string): Promise<void>;
-
-    /** send polling message */
-    sendPoll(
-      chatId: string,
-      name: string,
-      choices: Array,
-      options: MessageSendOptions
-    ): Promise<Message>;
-
-    /** read status user */
-    sendReadStatus(chatId: string, msgId: string): Promise<void>;
-
-    /** Generic event */
-    on(event: string, listener: (...args: any) => void): this;
-
-    /** Emitted when there has been an error while trying to restore an existing session */
-    on(event: "auth_failure", listener: (message: string) => void): this;
-
-    /** Emitted when authentication is successful */
-    on(
-      event: "authenticated",
-      listener: (
-        /**
-         * Object containing session information, when using LegacySessionAuth. Can be used to restore the session
-         */
-        session?: ClientSession
-      ) => void
-    ): this;
-
-    /**
-     * Emitted when the battery percentage for the attached device changes
-     * @deprecated
-     */
-    on(
-      event: "change_battery",
-      listener: (batteryInfo: BatteryInfo) => void
-    ): this;
-
-    /** Emitted when the connection state changes */
-    on(
-      event: "change_state",
-      listener: (
-        /** the new connection state */
-        state: WAState
-      ) => void
-    ): this;
-
-    /** Emitted when the client has been disconnected */
-    on(
-      event: "disconnected",
-      listener: (
-        /** reason that caused the disconnect */
-        reason: WAState | "NAVIGATION"
-      ) => void
-    ): this;
-
-    /** Emitted when a user joins the chat via invite link or is added by an admin */
-    on(
-      event: "group_join",
-      listener: (
-        /** GroupNotification with more information about the action */
-        notification: GroupNotification
-      ) => void
-    ): this;
-
-    /** Emitted when a user leaves the chat or is removed by an admin */
-    on(
-      event: "group_leave",
-      listener: (
-        /** GroupNotification with more information about the action */
-        notification: GroupNotification
-      ) => void
-    ): this;
-
-    /** Emitted when a current user is promoted to an admin or demoted to a regular user */
-    on(
-      event: "group_admin_changed",
-      listener: (
-        /** GroupNotification with more information about the action */
-        notification: GroupNotification
-      ) => void
-    ): this;
-
-    /** Emitted when group settings are updated, such as subject, description or picture */
-    on(
-      event: "group_update",
-      listener: (
-        /** GroupNotification with more information about the action */
-        notification: GroupNotification
-      ) => void
-    ): this;
-
-    /** Emitted when a contact or a group participant changed their phone number. */
-    on(
-      event: "contact_changed",
-      listener: (
-        /** Message with more information about the event. */
-        message: Message,
-        /** Old user's id. */
-        oldId: String,
-        /** New user's id. */
-        newId: String,
-        /** Indicates if a contact or a group participant changed their phone number. */
-        isContact: Boolean
-      ) => void
-    ): this;
-
-    /** Emitted when media has been uploaded for a message sent by the client */
-    on(
-      event: "media_uploaded",
-      listener: (
-        /** The message with media that was uploaded */
-        message: Message
-      ) => void
-    ): this;
-
-    /** Emitted when a new message is received */
-    on(
-      event: "message",
-      listener: (
-        /** The message that was received */
-        message: Message
-      ) => void
-    ): this;
-
-    /** Emitted when an ack event occurrs on message type */
-    on(
-      event: "message_ack",
-      listener: (
-        /** The message that was affected */
-        message: Message,
-        /** The new ACK value */
-        ack: MessageAck
-      ) => void
-    ): this;
-
-    /** Emitted when a chat unread count changes */
-    on(
-      event: "unread_count",
-      listener: (
-        /** The chat that was affected */
-        chat: Chat
-      ) => void
-    ): this;
-
-    /** Emitted when a new message is created, which may include the current user's own messages */
-    on(
-      event: "message_create",
-      listener: (
-        /** The message that was created */
-        message: Message
-      ) => void
-    ): this;
-
-    /** Emitted when a message is deleted for everyone in the chat */
-    on(
-      event: "message_revoke_everyone",
-      listener: (
-        /** The message that was revoked, in its current state. It will not contain the original message's data */
-        message: Message,
-        /**The message that was revoked, before it was revoked.
-         * It will contain the message's original data.
-         * Note that due to the way this data is captured,
-         * it may be possible that this param will be undefined. */
-        revoked_msg?: Message | null
-      ) => void
-    ): this;
-
-    /** Emitted when a message is deleted by the current user */
-    on(
-      event: "message_revoke_me",
-      listener: (
-        /** The message that was revoked */
-        message: Message
-      ) => void
-    ): this;
-
-    /** Emitted when a reaction is sent, received, updated or removed */
-    on(
-      event: "message_reaction",
-      listener: (
-        /** The reaction object */
-        reaction: Reaction
-      ) => void
-    ): this;
-
-    /** Emitted when a chat is removed */
-    on(
-      event: "chat_removed",
-      listener: (
-        /** The chat that was removed */
-        chat: Chat
-      ) => void
-    ): this;
-
-    /** Emitted when a chat is archived/unarchived */
-    on(
-      event: "chat_archived",
-      listener: (
-        /** The chat that was archived/unarchived */
-        chat: Chat,
-        /** State the chat is currently in */
-        currState: boolean,
-        /** State the chat was previously in */
-        prevState: boolean
-      ) => void
-    ): this;
-
-    /** Emitted when loading screen is appearing */
-    on(
-      event: "loading_screen",
-      listener: (percent: string, message: string) => void
-    ): this;
-
-    /** Emitted when the QR code is received */
-    on(
-      event: "qr",
-      listener: (
-        /** qr code string
-         *  @example ```1@9Q8tWf6bnezr8uVGwVCluyRuBOJ3tIglimzI5dHB0vQW2m4DQ0GMlCGf,f1/vGcW4Z3vBa1eDNl3tOjWqLL5DpYTI84DMVkYnQE8=,ZL7YnK2qdPN8vKo2ESxhOQ==``` */
-        qr: string
-      ) => void
-    ): this;
-
-    /* login with code */
-    on(event: "code", listener: (code: string) => void): this;
-
-    /** Emitted when a call is received */
-    on(
-      event: "call",
-      listener: (
-        /** The call that started */
-        call: Call
-      ) => void
-    ): this;
-
-    /** Emitted when the client has initialized and is ready to receive messages */
-    on(event: "ready", listener: () => void): this;
-
-    /** Emitted when the RemoteAuth session is saved successfully on the external Database */
-    on(event: "remote_session_saved", listener: () => void): this;
-
-    /** Emitted when a poll vote is received */
-    on(
-      event: "poll_vote",
-      listener: (
-        /** The poll vote */
-        vote: PollVote
-      ) => void
-    ): this;
+      /** Marks the client as offline */
+      sendPresenceUnavailable(): Promise < void > ;
+
+      /** Mark as seen for the Chat */
+      sendSeen(chatId: string): Promise < boolean > ;
+
+      /** Mark the Chat as unread */
+      markChatUnread(chatId: string): Promise < void > ;
+
+      /**
+       * Sets the current user's status message
+       * @param status New status message
+       */
+      setStatus(status: string): Promise < void > ;
+
+      /**
+       * Sets the current user's display name
+       * @param displayName New display name
+       */
+      setDisplayName(displayName: string): Promise < boolean > ;
+
+      /** Changes and returns the archive state of the Chat */
+      unarchiveChat(chatId: string): Promise < boolean > ;
+
+      /** Unmutes the Chat */
+      unmuteChat(chatId: string): Promise < void > ;
+
+      /** Sets the current user's profile picture */
+      setProfilePicture(media: MessageMedia): Promise < boolean > ;
+
+      /** Deletes the current user's profile picture */
+      deleteProfilePicture(): Promise < boolean > ;
+
+      /** Send a call to someone */
+      sendCall(chatId: string, options: CallOptions): Promise < Boolean > ;
+
+      /** Hang up the call in progress */
+      endCall(chatId: string): Promise < Boolean > ;
+
+      /** Receive a phone call from someone */
+      acceptCall(chatId: string): Promise < Boolean > ;
+
+      /** Displays last seen status (Conditions : No Privacy) */
+      getLastSeen(chatId: string): Promise < string | Boolean | Number > ;
+
+      /** Archives or No all selected conversation, 'chat' or 'group' except pinned ones */
+      archiveAll(type: string, status: boolean): Promise < Boolean > ;
+
+      /** Mute or No all selected conversation, 'chat' or 'group' except pinned ones */
+      muteAll(type: string, status: boolean): Promise < Boolean > ;
+
+      /** Displays connection status */
+      getHost(): Promise < Object > ;
+
+      /** Change the display theme 'light' or 'dark' */
+      setTheme(type: string): Promise < void > ;
+
+      /** get display theme */
+      getTheme(): Promise < string > ;
+
+      /** Delete all messages */
+      clearMessage(chatId: string): Promise < Boolean > ;
+
+      /** fetch stories user */
+      getStories(chatId: string): Promise < Array > ;
+
+      /** get contact by name */
+      getContactByName(name: string): Promise < void > ;
+
+      /** send polling message */
+      sendPoll(
+          chatId: string,
+          name: string,
+          choices: Array,
+          options: MessageSendOptions
+      ): Promise < Message > ;
+
+      /** read status user */
+      sendReadStatus(chatId: string, msgId: string): Promise < void > ;
+
+      /** Generic event */
+      on(event: string, listener: (...args: any) => void): this;
+
+      /** Emitted when there has been an error while trying to restore an existing session */
+      on(event: "auth_failure", listener: (message: string) => void): this;
+
+      /** Emitted when authentication is successful */
+      on(
+          event: "authenticated",
+          listener: (
+              /**
+               * Object containing session information, when using LegacySessionAuth. Can be used to restore the session
+               */
+              session ? : ClientSession
+          ) => void
+      ): this;
+
+      /**
+       * Emitted when the battery percentage for the attached device changes
+       * @deprecated
+       */
+      on(
+          event: "change_battery",
+          listener: (batteryInfo: BatteryInfo) => void
+      ): this;
+
+      /** Emitted when the connection state changes */
+      on(
+          event: "change_state",
+          listener: (
+              /** the new connection state */
+              state: WAState
+          ) => void
+      ): this;
+
+      /** Emitted when the client has been disconnected */
+      on(
+          event: "disconnected",
+          listener: (
+              /** reason that caused the disconnect */
+              reason: WAState | "NAVIGATION"
+          ) => void
+      ): this;
+
+      /** Emitted when a user joins the chat via invite link or is added by an admin */
+      on(
+          event: "group_join",
+          listener: (
+              /** GroupNotification with more information about the action */
+              notification: GroupNotification
+          ) => void
+      ): this;
+
+      /** Emitted when a user leaves the chat or is removed by an admin */
+      on(
+          event: "group_leave",
+          listener: (
+              /** GroupNotification with more information about the action */
+              notification: GroupNotification
+          ) => void
+      ): this;
+
+      /** Emitted when a current user is promoted to an admin or demoted to a regular user */
+      on(
+          event: "group_admin_changed",
+          listener: (
+              /** GroupNotification with more information about the action */
+              notification: GroupNotification
+          ) => void
+      ): this;
+
+      /** Emitted when group settings are updated, such as subject, description or picture */
+      on(
+          event: "group_update",
+          listener: (
+              /** GroupNotification with more information about the action */
+              notification: GroupNotification
+          ) => void
+      ): this;
+
+      /** Emitted when a contact or a group participant changed their phone number. */
+      on(
+          event: "contact_changed",
+          listener: (
+              /** Message with more information about the event. */
+              message: Message,
+              /** Old user's id. */
+              oldId: String,
+              /** New user's id. */
+              newId: String,
+              /** Indicates if a contact or a group participant changed their phone number. */
+              isContact: Boolean
+          ) => void
+      ): this;
+
+      /** Emitted when media has been uploaded for a message sent by the client */
+      on(
+          event: "media_uploaded",
+          listener: (
+              /** The message with media that was uploaded */
+              message: Message
+          ) => void
+      ): this;
+
+      /** Emitted when a new message is received */
+      on(
+          event: "message",
+          listener: (
+              /** The message that was received */
+              message: Message
+          ) => void
+      ): this;
+
+      /** Emitted when an ack event occurrs on message type */
+      on(
+          event: "message_ack",
+          listener: (
+              /** The message that was affected */
+              message: Message,
+              /** The new ACK value */
+              ack: MessageAck
+          ) => void
+      ): this;
+
+      /** Emitted when a chat unread count changes */
+      on(
+          event: "unread_count",
+          listener: (
+              /** The chat that was affected */
+              chat: Chat
+          ) => void
+      ): this;
+
+      /** Emitted when a new message is created, which may include the current user's own messages */
+      on(
+          event: "message_create",
+          listener: (
+              /** The message that was created */
+              message: Message
+          ) => void
+      ): this;
+
+      /** Emitted when a message is deleted for everyone in the chat */
+      on(
+          event: "message_revoke_everyone",
+          listener: (
+              /** The message that was revoked, in its current state. It will not contain the original message's data */
+              message: Message,
+              /**The message that was revoked, before it was revoked.
+               * It will contain the message's original data.
+               * Note that due to the way this data is captured,
+               * it may be possible that this param will be undefined. */
+              revoked_msg ? : Message | null
+          ) => void
+      ): this;
+
+      /** Emitted when a message is deleted by the current user */
+      on(
+          event: "message_revoke_me",
+          listener: (
+              /** The message that was revoked */
+              message: Message
+          ) => void
+      ): this;
+
+      /** Emitted when a reaction is sent, received, updated or removed */
+      on(
+          event: "message_reaction",
+          listener: (
+              /** The reaction object */
+              reaction: Reaction
+          ) => void
+      ): this;
+
+      /** Emitted when a chat is removed */
+      on(
+          event: "chat_removed",
+          listener: (
+              /** The chat that was removed */
+              chat: Chat
+          ) => void
+      ): this;
+
+      /** Emitted when a chat is archived/unarchived */
+      on(
+          event: "chat_archived",
+          listener: (
+              /** The chat that was archived/unarchived */
+              chat: Chat,
+              /** State the chat is currently in */
+              currState: boolean,
+              /** State the chat was previously in */
+              prevState: boolean
+          ) => void
+      ): this;
+
+      /** Emitted when loading screen is appearing */
+      on(
+          event: "loading_screen",
+          listener: (percent: string, message: string) => void
+      ): this;
+
+      /** Emitted when the QR code is received */
+      on(
+          event: "qr",
+          listener: (
+              /** qr code string
+               *  @example ```1@9Q8tWf6bnezr8uVGwVCluyRuBOJ3tIglimzI5dHB0vQW2m4DQ0GMlCGf,f1/vGcW4Z3vBa1eDNl3tOjWqLL5DpYTI84DMVkYnQE8=,ZL7YnK2qdPN8vKo2ESxhOQ==``` */
+              qr: string
+          ) => void
+      ): this;
+
+      /* login with code */
+      on(event: "code", listener: (code: string) => void): this;
+
+      /** Emitted when a call is received */
+      on(
+          event: "call",
+          listener: (
+              /** The call that started */
+              call: Call
+          ) => void
+      ): this;
+
+      /** Emitted when the client has initialized and is ready to receive messages */
+      on(event: "ready", listener: () => void): this;
+
+      /** Emitted when the RemoteAuth session is saved successfully on the external Database */
+      on(event: "remote_session_saved", listener: () => void): this;
+
+      /** Emitted when a poll vote is received */
+      on(
+          event: "poll_vote",
+          listener: (
+              /** The poll vote */
+              vote: PollVote
+          ) => void
+      ): this;
   }
 
   /** Current connection information */
   export interface ClientInfo {
-    /**
-     * Current user ID
-     * @deprecated Use .wid instead
-     */
-    me: ContactId;
-    /** Current user ID */
-    wid: ContactId;
-    /**
-     * Information about the phone this client is connected to.  Not available in multi-device.
-     * @deprecated
-     */
-    phone: ClientInfoPhone;
-    /** Platform the phone is running on */
-    platform: string;
-    /** Name configured to be shown in push notifications */
-    pushname: string;
+      /**
+       * Current user ID
+       * @deprecated Use .wid instead
+       */
+      me: ContactId;
+      /** Current user ID */
+      wid: ContactId;
+      /**
+       * Information about the phone this client is connected to.  Not available in multi-device.
+       * @deprecated
+       */
+      phone: ClientInfoPhone;
+      /** Platform the phone is running on */
+      platform: string;
+      /** Name configured to be shown in push notifications */
+      pushname: string;
 
-    /** Get current battery percentage and charging status for the attached device */
-    getBatteryStatus: () => Promise<BatteryInfo>;
+      /** Get current battery percentage and charging status for the attached device */
+      getBatteryStatus: () => Promise < BatteryInfo > ;
   }
 
   /**
@@ -489,114 +494,126 @@ declare namespace WAWebJS {
    * @deprecated
    */
   export interface ClientInfoPhone {
-    /** WhatsApp Version running on the phone */
-    wa_version: string;
-    /** OS Version running on the phone (iOS or Android version) */
-    os_version: string;
-    /** Device manufacturer */
-    device_manufacturer: string;
-    /** Device model */
-    device_model: string;
-    /** OS build number */
-    os_build_number: string;
+      /** WhatsApp Version running on the phone */
+      wa_version: string;
+      /** OS Version running on the phone (iOS or Android version) */
+      os_version: string;
+      /** Device manufacturer */
+      device_manufacturer: string;
+      /** Device model */
+      device_model: string;
+      /** OS build number */
+      os_build_number: string;
   }
 
   /** Options for initializing the whatsapp client */
   export interface ClientOptions {
-    /** Timeout for authentication selector in playwright
-     * @default 0 */
-    authTimeoutMs?: number;
-    /** playwright launch options. View docs here: https://github.com/microsoft/playwright/ */
-    playwright?: playwright.LaunchOptions & playwright.ConnectOptions;
-    /** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
-    authStrategy?: AuthStrategy;
-    /** How many times should the qrcode be refreshed before giving up
-     * @default 0 (disabled) */
-    qrMaxRetries?: number;
-    /**
-     * @deprecated This option should be set directly on the LegacySessionAuth
-     */
+      /** Timeout for authentication selector in playwright
+       * @default 0 */
+      authTimeoutMs ? : number;
+      /** playwright launch options. View docs here: https://github.com/microsoft/playwright/ */
+      playwright ? : playwright.LaunchOptions & playwright.ConnectOptions;
+      /** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
+      authStrategy ? : AuthStrategy;
+      /** How many times should the qrcode be refreshed before giving up
+       * @default 0 (disabled) */
+      qrMaxRetries ? : number;
+      /**
+       * @deprecated This option should be set directly on the LegacySessionAuth
+       */
 
-    /* linking method */
-    linkingMethod: LinkingMethod;
+      /* linking method */
+      linkingMethod: LinkingMethod;
 
-    restartOnAuthFail?: boolean;
-    /**
-     * @deprecated Only here for backwards-compatibility. You should move to using LocalAuth, or set the authStrategy to LegacySessionAuth explicitly.
-     */
-    session?: ClientSession;
-    /** If another whatsapp web session is detected (another browser), take over the session in the current browser
-     * @default false */
-    takeoverOnConflict?: boolean;
-    /** How much time to wait before taking over the session
-     * @default 0 */
-    takeoverTimeoutMs?: number;
-    /** User agent to use in playwright.
-     * @default 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36' */
-    userAgent?: string;
-    /** Ffmpeg path to use when formating videos to webp while sending stickers
-     * @default 'ffmpeg' */
-    ffmpegPath?: string;
-    /** Object with proxy autentication requirements @default: undefined */
-    proxyAuthentication?: { username: string; password: string } | undefined;
+      restartOnAuthFail ? : boolean;
+      /**
+       * @deprecated Only here for backwards-compatibility. You should move to using LocalAuth, or set the authStrategy to LegacySessionAuth explicitly.
+       */
+      session ? : ClientSession;
+      /** If another whatsapp web session is detected (another browser), take over the session in the current browser
+       * @default false */
+      takeoverOnConflict ? : boolean;
+      /** How much time to wait before taking over the session
+       * @default 0 */
+      takeoverTimeoutMs ? : number;
+      /** User agent to use in playwright.
+       * @default 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36' */
+      userAgent ? : string;
+      /** Ffmpeg path to use when formating videos to webp while sending stickers
+       * @default 'ffmpeg' */
+      ffmpegPath ? : string;
+      /** Object with proxy autentication requirements @default: undefined */
+      proxyAuthentication ? : {
+          username: string;password: string
+      } | undefined;
   }
 
   /**
    * Base class which all authentication strategies extend
    */
   export abstract class AuthStrategy {
-    setup: (client: Client) => void;
-    beforeBrowserInitialized: () => Promise<void>;
-    afterBrowserInitialized: () => Promise<void>;
-    onAuthenticationNeeded: () => Promise<{
-      failed?: boolean;
-      restart?: boolean;
-      failureEventPayload?: any;
-    }>;
-    getAuthEventPayload: () => Promise<any>;
-    afterAuthReady: () => Promise<void>;
-    disconnect: () => Promise<void>;
-    destroy: () => Promise<void>;
-    logout: () => Promise<void>;
+      setup: (client: Client) => void;
+      beforeBrowserInitialized: () => Promise < void > ;
+      afterBrowserInitialized: () => Promise < void > ;
+      onAuthenticationNeeded: () => Promise < {
+          failed ? : boolean;
+          restart ? : boolean;
+          failureEventPayload ? : any;
+      } > ;
+      getAuthEventPayload: () => Promise < any > ;
+      afterAuthReady: () => Promise < void > ;
+      disconnect: () => Promise < void > ;
+      destroy: () => Promise < void > ;
+      logout: () => Promise < void > ;
   }
 
   /**
    * No session restoring functionality
    * Will need to authenticate via QR code every time
    */
-  export class NoAuth extends AuthStrategy { }
+  export class NoAuth extends AuthStrategy {}
 
   /**
    * Local directory-based authentication
    */
   export class LocalAuth extends AuthStrategy {
-    public clientId?: string;
-    public dataPath?: string;
-    constructor(options?: { clientId?: string; dataPath?: string });
+      public clientId ? : string;
+      public dataPath ? : string;
+      constructor(options ? : {
+          clientId ? : string;dataPath ? : string
+      });
   }
 
   /**
    * Remote-based authentication
    */
   export class RemoteAuth extends AuthStrategy {
-    public clientId?: string;
-    public dataPath?: string;
-    constructor(options?: {
-      store: Store;
-      clientId?: string;
-      dataPath?: string;
-      backupSyncIntervalMs: number;
-    });
+      public clientId ? : string;
+      public dataPath ? : string;
+      constructor(options ? : {
+          store: Store;
+          clientId ? : string;
+          dataPath ? : string;
+          backupSyncIntervalMs: number;
+      });
   }
 
   /**
    * Remote store interface
    */
   export interface Store {
-    sessionExists: (options: { session: string }) => Promise<boolean> | boolean;
-    delete: (options: { session: string }) => Promise<any> | any;
-    save: (options: { session: string }) => Promise<any> | any;
-    extract: (options: { session: string; path: string }) => Promise<any> | any;
+      sessionExists: (options: {
+          session: string
+      }) => Promise < boolean > | boolean;
+      delete: (options: {
+          session: string
+      }) => Promise < any > | any;
+      save: (options: {
+          session: string
+      }) => Promise < any > | any;
+      extract: (options: {
+          session: string;path: string
+      }) => Promise < any > | any;
   }
 
   /**
@@ -604,70 +621,71 @@ declare namespace WAWebJS {
    * Not compatible with multi-device accounts.
    */
   export class LegacySessionAuth extends AuthStrategy {
-    constructor(options?: {
-      session?: ClientSession;
-      restartOnAuthFail?: boolean;
-    });
+      constructor(options ? : {
+          session ? : ClientSession;
+          restartOnAuthFail ? : boolean;
+      });
   }
 
   /**
    * Represents a WhatsApp client session
    */
   export interface ClientSession {
-    WABrowserId: string;
-    WASecretBundle: string;
-    WAToken1: string;
-    WAToken2: string;
+      WABrowserId: string;
+      WASecretBundle: string;
+      WAToken1: string;
+      WAToken2: string;
   }
 
   /**
    * @deprecated
    */
   export interface BatteryInfo {
-    /** The current battery percentage */
-    battery: number;
-    /** Indicates if the phone is plugged in (true) or not (false) */
-    plugged: boolean;
+      /** The current battery percentage */
+      battery: number;
+      /** Indicates if the phone is plugged in (true) or not (false) */
+      plugged: boolean;
   }
 
   export interface CreateGroupResult {
-    /** ID for the group that was just created */
-    gid: string;
-    /** participants that were not added to the group.
-     * Keys represent the ID for participant that was not added and its value is a status code
-     * that represents the reason why participant could not be added.
-     * This is usually 403 if the user's privacy settings don't allow you to add them to groups. */
-    missingParticipants: Record<string, string>;
+      /** ID for the group that was just created */
+      gid: string;
+      /** participants that were not added to the group.
+       * Keys represent the ID for participant that was not added and its value is a status code
+       * that represents the reason why participant could not be added.
+       * This is usually 403 if the user's privacy settings don't allow you to add them to groups. */
+      missingParticipants: Record < string,
+      string > ;
   }
 
   export interface GroupNotification {
-    /** ContactId for the user that produced the GroupNotification */
-    author: string;
-    /** Extra content */
-    body: string;
-    /** ID for the Chat that this groupNotification was sent for */
-    chatId: string;
-    /** ID that represents the groupNotification
-     *  @todo create a more specific type for the id object */
-    id: object;
-    /** Contact IDs for the users that were affected by this GroupNotification */
-    recipientIds: string[];
-    /** Unix timestamp for when the groupNotification was created */
-    timestamp: number;
-    /** GroupNotification type */
-    type: GroupNotificationTypes;
+      /** ContactId for the user that produced the GroupNotification */
+      author: string;
+      /** Extra content */
+      body: string;
+      /** ID for the Chat that this groupNotification was sent for */
+      chatId: string;
+      /** ID that represents the groupNotification
+       *  @todo create a more specific type for the id object */
+      id: object;
+      /** Contact IDs for the users that were affected by this GroupNotification */
+      recipientIds: string[];
+      /** Unix timestamp for when the groupNotification was created */
+      timestamp: number;
+      /** GroupNotification type */
+      type: GroupNotificationTypes;
 
-    /** Returns the Chat this GroupNotification was sent in */
-    getChat: () => Promise<Chat>;
-    /** Returns the Contact this GroupNotification was produced by */
-    getContact: () => Promise<Contact>;
-    /** Returns the Contacts affected by this GroupNotification */
-    getRecipients: () => Promise<Contact[]>;
-    /** Sends a message to the same chat this GroupNotification was produced in */
-    reply: (
-      content: MessageContent,
-      options?: MessageSendOptions
-    ) => Promise<Message>;
+      /** Returns the Chat this GroupNotification was sent in */
+      getChat: () => Promise < Chat > ;
+      /** Returns the Contact this GroupNotification was produced by */
+      getContact: () => Promise < Contact > ;
+      /** Returns the Contacts affected by this GroupNotification */
+      getRecipients: () => Promise < Contact[] > ;
+      /** Sends a message to the same chat this GroupNotification was produced in */
+      reply: (
+          content: MessageContent,
+          options ? : MessageSendOptions
+      ) => Promise < Message > ;
   }
 
   /** whatsapp web url */
@@ -678,139 +696,145 @@ declare namespace WAWebJS {
 
   /** Chat types */
   export enum ChatTypes {
-    SOLO = "solo",
-    GROUP = "group",
-    UNKNOWN = "unknown",
+      SOLO = "solo",
+          GROUP = "group",
+          UNKNOWN = "unknown",
   }
 
   /** Events that can be emitted by the client */
   export enum Events {
-    AUTHENTICATED = "authenticated",
-    AUTHENTICATION_FAILURE = "auth_failure",
-    READY = "ready",
-    MESSAGE_RECEIVED = "message",
-    MESSAGE_CREATE = "message_create",
-    MESSAGE_REVOKED_EVERYONE = "message_revoke_everyone",
-    MESSAGE_REVOKED_ME = "message_revoke_me",
-    MESSAGE_ACK = "message_ack",
-    MEDIA_UPLOADED = "media_uploaded",
-    CONTACT_CHANGED = "contact_changed",
-    GROUP_JOIN = "group_join",
-    GROUP_LEAVE = "group_leave",
-    GROUP_ADMIN_CHANGED = "group_admin_changed",
-    GROUP_UPDATE = "group_update",
-    QR_RECEIVED = "qr",
-    LOADING_SCREEN = "loading_screen",
-    DISCONNECTED = "disconnected",
-    STATE_CHANGED = "change_state",
-    BATTERY_CHANGED = "change_battery",
-    REMOTE_SESSION_SAVED = "remote_session_saved",
-    POLL_VOTE = "poll_vote",
-    CALL = "call",
+      AUTHENTICATED = "authenticated",
+          AUTHENTICATION_FAILURE = "auth_failure",
+          READY = "ready",
+          MESSAGE_RECEIVED = "message",
+          MESSAGE_CREATE = "message_create",
+          MESSAGE_REVOKED_EVERYONE = "message_revoke_everyone",
+          MESSAGE_REVOKED_ME = "message_revoke_me",
+          MESSAGE_ACK = "message_ack",
+          MEDIA_UPLOADED = "media_uploaded",
+          CONTACT_CHANGED = "contact_changed",
+          GROUP_JOIN = "group_join",
+          GROUP_LEAVE = "group_leave",
+          GROUP_ADMIN_CHANGED = "group_admin_changed",
+          GROUP_UPDATE = "group_update",
+          QR_RECEIVED = "qr",
+          LOADING_SCREEN = "loading_screen",
+          DISCONNECTED = "disconnected",
+          STATE_CHANGED = "change_state",
+          BATTERY_CHANGED = "change_battery",
+          REMOTE_SESSION_SAVED = "remote_session_saved",
+          POLL_VOTE = "poll_vote",
+          CALL = "call",
   }
 
   /** Group notification types */
   export enum GroupNotificationTypes {
-    ADD = "add",
-    INVITE = "invite",
-    REMOVE = "remove",
-    LEAVE = "leave",
-    SUBJECT = "subject",
-    DESCRIPTION = "description",
-    PICTURE = "picture",
-    ANNOUNCE = "announce",
-    RESTRICT = "restrict",
+      ADD = "add",
+          INVITE = "invite",
+          REMOVE = "remove",
+          LEAVE = "leave",
+          SUBJECT = "subject",
+          DESCRIPTION = "description",
+          PICTURE = "picture",
+          ANNOUNCE = "announce",
+          RESTRICT = "restrict",
   }
 
   /** Message ACK */
   export enum MessageAck {
-    ACK_ERROR = -1,
-    ACK_PENDING = 0,
-    ACK_SERVER = 1,
-    ACK_DEVICE = 2,
-    ACK_READ = 3,
-    ACK_PLAYED = 4,
+      ACK_ERROR = -1,
+          ACK_PENDING = 0,
+          ACK_SERVER = 1,
+          ACK_DEVICE = 2,
+          ACK_READ = 3,
+          ACK_PLAYED = 4,
   }
 
   /** Message types */
   export enum MessageTypes {
-    TEXT = "chat",
-    AUDIO = "audio",
-    VOICE = "ptt",
-    IMAGE = "image",
-    VIDEO = "video",
-    DOCUMENT = "document",
-    STICKER = "sticker",
-    LOCATION = "location",
-    CONTACT_CARD = "vcard",
-    CONTACT_CARD_MULTI = "multi_vcard",
-    REVOKED = "revoked",
-    ORDER = "order",
-    PRODUCT = "product",
-    PAYMENT = "payment",
-    UNKNOWN = "unknown",
-    GROUP_INVITE = "groups_v4_invite",
-    LIST = "list",
-    LIST_RESPONSE = "list_response",
-    BUTTONS_RESPONSE = "buttons_response",
-    BROADCAST_NOTIFICATION = "broadcast_notification",
-    CALL_LOG = "call_log",
-    CIPHERTEXT = "ciphertext",
-    DEBUG = "debug",
-    E2E_NOTIFICATION = "e2e_notification",
-    GP2 = "gp2",
-    GROUP_NOTIFICATION = "group_notification",
-    HSM = "hsm",
-    INTERACTIVE = "interactive",
-    NATIVE_FLOW = "native_flow",
-    NOTIFICATION = "notification",
-    NOTIFICATION_TEMPLATE = "notification_template",
-    OVERSIZED = "oversized",
-    PROTOCOL = "protocol",
-    REACTION = "reaction",
-    TEMPLATE_BUTTON_REPLY = "template_button_reply",
-    POLL_CREATION = "poll_creation",
+      TEXT = "chat",
+          AUDIO = "audio",
+          VOICE = "ptt",
+          IMAGE = "image",
+          VIDEO = "video",
+          DOCUMENT = "document",
+          STICKER = "sticker",
+          LOCATION = "location",
+          CONTACT_CARD = "vcard",
+          CONTACT_CARD_MULTI = "multi_vcard",
+          REVOKED = "revoked",
+          ORDER = "order",
+          PRODUCT = "product",
+          PAYMENT = "payment",
+          UNKNOWN = "unknown",
+          GROUP_INVITE = "groups_v4_invite",
+          LIST = "list",
+          LIST_RESPONSE = "list_response",
+          BUTTONS_RESPONSE = "buttons_response",
+          BROADCAST_NOTIFICATION = "broadcast_notification",
+          CALL_LOG = "call_log",
+          CIPHERTEXT = "ciphertext",
+          DEBUG = "debug",
+          E2E_NOTIFICATION = "e2e_notification",
+          GP2 = "gp2",
+          GROUP_NOTIFICATION = "group_notification",
+          HSM = "hsm",
+          INTERACTIVE = "interactive",
+          NATIVE_FLOW = "native_flow",
+          NOTIFICATION = "notification",
+          NOTIFICATION_TEMPLATE = "notification_template",
+          OVERSIZED = "oversized",
+          PROTOCOL = "protocol",
+          REACTION = "reaction",
+          TEMPLATE_BUTTON_REPLY = "template_button_reply",
+          POLL_CREATION = "poll_creation",
   }
 
   /** Client status */
   export enum Status {
-    INITIALIZING = 0,
-    AUTHENTICATING = 1,
-    READY = 3,
+      INITIALIZING = 0,
+          AUTHENTICATING = 1,
+          READY = 3,
   }
 
   /** WhatsApp state */
   export enum WAState {
-    CONFLICT = "CONFLICT",
-    CONNECTED = "CONNECTED",
-    DEPRECATED_VERSION = "DEPRECATED_VERSION",
-    OPENING = "OPENING",
-    PAIRING = "PAIRING",
-    PROXYBLOCK = "PROXYBLOCK",
-    SMB_TOS_BLOCK = "SMB_TOS_BLOCK",
-    TIMEOUT = "TIMEOUT",
-    TOS_BLOCK = "TOS_BLOCK",
-    UNLAUNCHED = "UNLAUNCHED",
-    UNPAIRED = "UNPAIRED",
-    UNPAIRED_IDLE = "UNPAIRED_IDLE",
+      CONFLICT = "CONFLICT",
+          CONNECTED = "CONNECTED",
+          DEPRECATED_VERSION = "DEPRECATED_VERSION",
+          OPENING = "OPENING",
+          PAIRING = "PAIRING",
+          PROXYBLOCK = "PROXYBLOCK",
+          SMB_TOS_BLOCK = "SMB_TOS_BLOCK",
+          TIMEOUT = "TIMEOUT",
+          TOS_BLOCK = "TOS_BLOCK",
+          UNLAUNCHED = "UNLAUNCHED",
+          UNPAIRED = "UNPAIRED",
+          UNPAIRED_IDLE = "UNPAIRED_IDLE",
   }
 
   export type MessageInfo = {
-    delivery: Array<{ id: ContactId; t: number }>;
-    deliveryRemaining: number;
-    played: Array<{ id: ContactId; t: number }>;
-    playedRemaining: number;
-    read: Array<{ id: ContactId; t: number }>;
-    readRemaining: number;
+      delivery: Array < {
+          id: ContactId;t: number
+      } > ;
+      deliveryRemaining: number;
+      played: Array < {
+          id: ContactId;t: number
+      } > ;
+      playedRemaining: number;
+      read: Array < {
+          id: ContactId;t: number
+      } > ;
+      readRemaining: number;
   };
 
   export type InviteV4Data = {
-    inviteCode: string;
-    inviteCodeExp: number;
-    groupId: string;
-    groupName?: string;
-    fromId: string;
-    toId: string;
+      inviteCode: string;
+      inviteCodeExp: number;
+      groupId: string;
+      groupName ? : string;
+      fromId: string;
+      toId: string;
   };
 
   /**
@@ -843,268 +867,270 @@ declare namespace WAWebJS {
    * }
    */
   export interface Message {
-    /** ACK status for the message */
-    ack: MessageAck;
-    /** If the message was sent to a group, this field will contain the user that sent the message. */
-    author?: string;
-    /** String that represents from which device type the message was sent */
-    deviceType: string;
-    /** Message content */
-    body: string;
-    /** Indicates if the message was a broadcast */
-    broadcast: boolean;
-    /** Indicates if the message was a status update */
-    isStatus: boolean;
-    /** Indicates if the message is a Gif */
-    isGif: boolean;
-    /** Indicates if the message will disappear after it expires */
-    isEphemeral: boolean;
-    /** ID for the Chat that this message was sent to, except if the message was sent by the current user */
-    from: string;
-    /** Indicates if the message was sent by the current user */
-    fromMe: boolean;
-    /** Indicates if the message has media available for download */
-    hasMedia: boolean;
-    /** Indicates if the message was sent as a reply to another message */
-    hasQuotedMsg: boolean;
-    /** Indicates whether there are reactions to the message */
-    hasReaction: boolean;
-    /** Indicates the duration of the message in seconds */
-    duration: string;
-    /** ID that represents the message */
-    id: MessageId;
-    /** Indicates if the message was forwarded */
-    isForwarded: boolean;
-    /**
-     * Indicates how many times the message was forwarded.
-     * The maximum value is 127.
-     */
-    forwardingScore: number;
-    /** Indicates if the message was starred */
-    isStarred: boolean;
-    /** Location information contained in the message, if the message is type "location" */
-    location: Location;
-    /** List of vCards contained in the message */
-    vCards: string[];
-    /** Invite v4 info */
-    inviteV4?: InviteV4Data;
-    /** MediaKey that represents the sticker 'ID' */
-    mediaKey?: string;
-    /** Indicates the mentions in the message body. */
-    mentionedIds: [];
-    /** Unix timestamp for when the message was created */
-    timestamp: number;
-    /**
-     * ID for who this message is for.
-     * If the message is sent by the current user, it will be the Chat to which the message is being sent.
-     * If the message is sent by another user, it will be the ID for the current user.
-     */
-    to: string;
-    /** Message type */
-    type: MessageTypes;
-    /** Links included in the message. */
-    links: Array<{
-      link: string;
-      isSuspicious: boolean;
-    }>;
-    /** Order ID */
-    orderId: string;
-    /** title */
-    title?: string;
-    /** description*/
-    description?: string;
-    /** Business Owner JID */
-    businessOwnerJid?: string;
-    /** Product JID */
-    productId?: string;
-    /** Message buttons */
-    dynamicReplyButtons?: object;
-    /** Selected button ID */
-    selectedButtonId?: string;
-    /** Selected list row ID */
-    selectedRowId?: string;
-    /** Returns message in a raw format */
-    rawData: object;
-    /*
-     * Reloads this Message object's data in-place with the latest values from WhatsApp Web.
-     * Note that the Message must still be in the web app cache for this to work, otherwise will return null.
-     */
-    /** Avaiaible poll voting options */
-    pollOptions: string[];
-    /** The current poll votes, refresh with .refreshPollVotes() */
-    pollVotes: PollVote[];
-    reload: () => Promise<Message>;
-    /** Accept the Group V4 Invite in message */
-    acceptGroupV4Invite: () => Promise<{ status: number }>;
-    /** Deletes the message from the chat */
-    delete: (everyone?: boolean) => Promise<void>;
-    /** Downloads and returns the attached message media */
-    downloadMedia: () => Promise<MessageMedia>;
-    /** Returns the Chat this message was sent in */
-    getChat: () => Promise<Chat>;
-    /** Returns the Contact this message was sent from */
-    getContact: () => Promise<Contact>;
-    /** Returns the Contacts mentioned in this message */
-    getMentions: () => Promise<Contact[]>;
-    /** Returns the quoted message, if any */
-    getQuotedMessage: () => Promise<Message>;
-    /**
-     * Sends a message as a reply to this message.
-     * If chatId is specified, it will be sent through the specified Chat.
-     * If not, it will send the message in the same Chat as the original message was sent.
-     */
-    reply: (
-      content: MessageContent,
-      chatId?: string,
-      options?: MessageSendOptions
-    ) => Promise<Message>;
-    /** React to this message with an emoji*/
-    react: (reaction: string) => Promise<void>;
-    /**
-     * Forwards this message to another chat (that you chatted before, otherwise it will fail)
-     */
-    forward: (chat: Chat | string) => Promise<void>;
-    /** Star this message */
-    star: () => Promise<void>;
-    /** Unstar this message */
-    unstar: () => Promise<void>;
-    /** Get information about message delivery status */
-    getInfo: () => Promise<MessageInfo | null>;
-    /**
-     * Gets the order associated with a given message
-     */
-    getOrder: () => Promise<Order>;
-    /**
-     * Gets the payment details associated with a given message
-     */
-    getPayment: () => Promise<Payment>;
-    /**
-     * Refreshes the current poll votes, only works with a poll_creation message
-     */
-    refreshPollVotes: () => Promise<void>;
-    /**
-     * Vote on the poll, only works with a poll_creation message
-     * @param {Array<string>} selectedOptions The selected options from .pollOptions
-     */
-    vote: (selectedOptions: string[]) => Promise<void>;
-    /**
-     * Gets the reactions associated with the given message
-     */
-    getReactions: () => Promise<ReactionList[]>;
+      /** ACK status for the message */
+      ack: MessageAck;
+      /** If the message was sent to a group, this field will contain the user that sent the message. */
+      author ? : string;
+      /** String that represents from which device type the message was sent */
+      deviceType: string;
+      /** Message content */
+      body: string;
+      /** Indicates if the message was a broadcast */
+      broadcast: boolean;
+      /** Indicates if the message was a status update */
+      isStatus: boolean;
+      /** Indicates if the message is a Gif */
+      isGif: boolean;
+      /** Indicates if the message will disappear after it expires */
+      isEphemeral: boolean;
+      /** ID for the Chat that this message was sent to, except if the message was sent by the current user */
+      from: string;
+      /** Indicates if the message was sent by the current user */
+      fromMe: boolean;
+      /** Indicates if the message has media available for download */
+      hasMedia: boolean;
+      /** Indicates if the message was sent as a reply to another message */
+      hasQuotedMsg: boolean;
+      /** Indicates whether there are reactions to the message */
+      hasReaction: boolean;
+      /** Indicates the duration of the message in seconds */
+      duration: string;
+      /** ID that represents the message */
+      id: MessageId;
+      /** Indicates if the message was forwarded */
+      isForwarded: boolean;
+      /**
+       * Indicates how many times the message was forwarded.
+       * The maximum value is 127.
+       */
+      forwardingScore: number;
+      /** Indicates if the message was starred */
+      isStarred: boolean;
+      /** Location information contained in the message, if the message is type "location" */
+      location: Location;
+      /** List of vCards contained in the message */
+      vCards: string[];
+      /** Invite v4 info */
+      inviteV4 ? : InviteV4Data;
+      /** MediaKey that represents the sticker 'ID' */
+      mediaKey ? : string;
+      /** Indicates the mentions in the message body. */
+      mentionedIds: [];
+      /** Unix timestamp for when the message was created */
+      timestamp: number;
+      /**
+       * ID for who this message is for.
+       * If the message is sent by the current user, it will be the Chat to which the message is being sent.
+       * If the message is sent by another user, it will be the ID for the current user.
+       */
+      to: string;
+      /** Message type */
+      type: MessageTypes;
+      /** Links included in the message. */
+      links: Array < {
+          link: string;
+          isSuspicious: boolean;
+      } > ;
+      /** Order ID */
+      orderId: string;
+      /** title */
+      title ? : string;
+      /** description*/
+      description ? : string;
+      /** Business Owner JID */
+      businessOwnerJid ? : string;
+      /** Product JID */
+      productId ? : string;
+      /** Message buttons */
+      dynamicReplyButtons ? : object;
+      /** Selected button ID */
+      selectedButtonId ? : string;
+      /** Selected list row ID */
+      selectedRowId ? : string;
+      /** Returns message in a raw format */
+      rawData: object;
+      /*
+       * Reloads this Message object's data in-place with the latest values from WhatsApp Web.
+       * Note that the Message must still be in the web app cache for this to work, otherwise will return null.
+       */
+      /** Avaiaible poll voting options */
+      pollOptions: string[];
+      /** The current poll votes, refresh with .refreshPollVotes() */
+      pollVotes: PollVote[];
+      reload: () => Promise < Message > ;
+      /** Accept the Group V4 Invite in message */
+      acceptGroupV4Invite: () => Promise < {
+          status: number
+      } > ;
+      /** Deletes the message from the chat */
+      delete: (everyone ? : boolean) => Promise < void > ;
+      /** Downloads and returns the attached message media */
+      downloadMedia: () => Promise < MessageMedia > ;
+      /** Returns the Chat this message was sent in */
+      getChat: () => Promise < Chat > ;
+      /** Returns the Contact this message was sent from */
+      getContact: () => Promise < Contact > ;
+      /** Returns the Contacts mentioned in this message */
+      getMentions: () => Promise < Contact[] > ;
+      /** Returns the quoted message, if any */
+      getQuotedMessage: () => Promise < Message > ;
+      /**
+       * Sends a message as a reply to this message.
+       * If chatId is specified, it will be sent through the specified Chat.
+       * If not, it will send the message in the same Chat as the original message was sent.
+       */
+      reply: (
+          content: MessageContent,
+          chatId ? : string,
+          options ? : MessageSendOptions
+      ) => Promise < Message > ;
+      /** React to this message with an emoji*/
+      react: (reaction: string) => Promise < void > ;
+      /**
+       * Forwards this message to another chat (that you chatted before, otherwise it will fail)
+       */
+      forward: (chat: Chat | string) => Promise < void > ;
+      /** Star this message */
+      star: () => Promise < void > ;
+      /** Unstar this message */
+      unstar: () => Promise < void > ;
+      /** Get information about message delivery status */
+      getInfo: () => Promise < MessageInfo | null > ;
+      /**
+       * Gets the order associated with a given message
+       */
+      getOrder: () => Promise < Order > ;
+      /**
+       * Gets the payment details associated with a given message
+       */
+      getPayment: () => Promise < Payment > ;
+      /**
+       * Refreshes the current poll votes, only works with a poll_creation message
+       */
+      refreshPollVotes: () => Promise < void > ;
+      /**
+       * Vote on the poll, only works with a poll_creation message
+       * @param {Array<string>} selectedOptions The selected options from .pollOptions
+       */
+      vote: (selectedOptions: string[]) => Promise < void > ;
+      /**
+       * Gets the reactions associated with the given message
+       */
+      getReactions: () => Promise < ReactionList[] > ;
   }
 
   /** ID that represents a message */
   export interface MessageId {
-    fromMe: boolean;
-    remote: string;
-    id: string;
-    _serialized: string;
+      fromMe: boolean;
+      remote: string;
+      id: string;
+      _serialized: string;
   }
 
   /** Location information */
   export class Location {
-    description?: string | null;
-    latitude: string;
-    longitude: string;
+      description ? : string | null;
+      latitude: string;
+      longitude: string;
 
-    constructor(latitude: number, longitude: number, description?: string);
+      constructor(latitude: number, longitude: number, description ? : string);
   }
 
   export interface Label {
-    /** Label name */
-    name: string;
-    /** Label ID */
-    id: string;
-    /** Color assigned to the label */
-    hexColor: string;
+      /** Label name */
+      name: string;
+      /** Label ID */
+      id: string;
+      /** Color assigned to the label */
+      hexColor: string;
 
-    /** Get all chats that have been assigned this Label */
-    getChats: () => Promise<Chat[]>;
+      /** Get all chats that have been assigned this Label */
+      getChats: () => Promise < Chat[] > ;
   }
 
   /** Options for sending a message */
   export interface MessageSendOptions {
-    /** Show links preview. Has no effect on multi-device accounts. */
-    linkPreview?: boolean;
-    /** Send audio as voice message */
-    sendAudioAsVoice?: boolean;
-    /** Send video as gif */
-    sendVideoAsGif?: boolean;
-    /** Send media as sticker */
-    sendMediaAsSticker?: boolean;
-    /** Send media as document */
-    sendMediaAsDocument?: boolean;
-    /** Automatically parse vCards and send them as contacts */
-    parseVCards?: boolean;
-    /** Image or videos caption */
-    caption?: string;
-    /** Id of the message that is being quoted (or replied to) */
-    quotedMessageId?: string;
-    /** Contacts that are being mentioned in the message */
-    mentions?: Contact[];
-    /** Send 'seen' status */
-    sendSeen?: boolean;
-    /** Media to be sent */
-    media?: MessageMedia;
-    /** Extra options */
-    extra?: any;
-    /** Sticker name, if sendMediaAsSticker is true */
-    stickerName?: string;
-    /** Sticker author, if sendMediaAsSticker is true */
-    stickerAuthor?: string;
-    /** Sticker categories, if sendMediaAsSticker is true */
-    stickerCategories?: string[];
+      /** Show links preview. Has no effect on multi-device accounts. */
+      linkPreview ? : boolean;
+      /** Send audio as voice message */
+      sendAudioAsVoice ? : boolean;
+      /** Send video as gif */
+      sendVideoAsGif ? : boolean;
+      /** Send media as sticker */
+      sendMediaAsSticker ? : boolean;
+      /** Send media as document */
+      sendMediaAsDocument ? : boolean;
+      /** Automatically parse vCards and send them as contacts */
+      parseVCards ? : boolean;
+      /** Image or videos caption */
+      caption ? : string;
+      /** Id of the message that is being quoted (or replied to) */
+      quotedMessageId ? : string;
+      /** Contacts that are being mentioned in the message */
+      mentions ? : Contact[];
+      /** Send 'seen' status */
+      sendSeen ? : boolean;
+      /** Media to be sent */
+      media ? : MessageMedia;
+      /** Extra options */
+      extra ? : any;
+      /** Sticker name, if sendMediaAsSticker is true */
+      stickerName ? : string;
+      /** Sticker author, if sendMediaAsSticker is true */
+      stickerAuthor ? : string;
+      /** Sticker categories, if sendMediaAsSticker is true */
+      stickerCategories ? : string[];
   }
 
   export interface MediaFromURLOptions {
-    client?: Client;
-    filename?: string;
-    unsafeMime?: boolean;
-    reqOptions?: AxiosInterceptorOptions;
+      client ? : Client;
+      filename ? : string;
+      unsafeMime ? : boolean;
+      reqOptions ? : AxiosInterceptorOptions;
   }
 
   /** Media attached to a message */
   export class MessageMedia {
-    /** MIME type of the attachment */
-    mimetype: string;
-    /** Base64-encoded data of the file */
-    data: string;
-    /** Document file name. Value can be null */
-    filename?: string | null;
-    /** Document file size in bytes. Value can be null. */
-    filesize?: number | null;
+      /** MIME type of the attachment */
+      mimetype: string;
+      /** Base64-encoded data of the file */
+      data: string;
+      /** Document file name. Value can be null */
+      filename ? : string | null;
+      /** Document file size in bytes. Value can be null. */
+      filesize ? : number | null;
 
-    /**
-     * @param {string} mimetype MIME type of the attachment
-     * @param {string} data Base64-encoded data of the file
-     * @param {?string} filename Document file name. Value can be null
-     * @param {?number} filesize Document file size in bytes. Value can be null.
-     */
-    constructor(
-      mimetype: string,
-      data: string,
-      filename?: string | null,
-      filesize?: number | null
-    );
+      /**
+       * @param {string} mimetype MIME type of the attachment
+       * @param {string} data Base64-encoded data of the file
+       * @param {?string} filename Document file name. Value can be null
+       * @param {?number} filesize Document file size in bytes. Value can be null.
+       */
+      constructor(
+          mimetype: string,
+          data: string,
+          filename ? : string | null,
+          filesize ? : number | null
+      );
 
-    /** Creates a MessageMedia instance from a local file path */
-    static fromFilePath: (filePath: string) => MessageMedia;
+      /** Creates a MessageMedia instance from a local file path */
+      static fromFilePath: (filePath: string) => MessageMedia;
 
-    /** Creates a MessageMedia instance from a URL */
-    static fromUrl: (
-      url: string,
-      options?: MediaFromURLOptions
-    ) => Promise<MessageMedia>;
+      /** Creates a MessageMedia instance from a URL */
+      static fromUrl: (
+          url: string,
+          options ? : MediaFromURLOptions
+      ) => Promise < MessageMedia > ;
   }
 
-  export type MessageContent =
-    | string
-    | MessageMedia
-    | Location
-    | Contact
-    | Contact[]
-    | List
-    | Buttons;
+  export type MessageContent = |
+      string |
+      MessageMedia |
+      Location |
+      Contact |
+      Contact[] |
+      List |
+      Buttons;
 
   /**
    * Represents a Contact on WhatsApp
@@ -1136,87 +1162,87 @@ declare namespace WAWebJS {
    * }
    */
   export interface Contact {
-    /** Contact's phone number */
-    number: string;
-    /** Indicates if the contact is a business contact */
-    isBusiness: boolean;
-    /** ID that represents the contact */
-    id: ContactId;
-    /** Indicates if the contact is an enterprise contact */
-    isEnterprise: boolean;
-    /** Indicates if the contact is a group contact */
-    isGroup: boolean;
-    /** Indicates if the contact is the current user's contact */
-    isMe: boolean;
-    /** Indicates if the number is saved in the current phone's contacts */
-    isMyContact: boolean;
-    /** Indicates if the contact is a user contact */
-    isUser: boolean;
-    /** Indicates if the number is registered on WhatsApp */
-    isWAContact: boolean;
-    /** Indicates if you have blocked this contact */
-    isBlocked: boolean;
-    /** @todo verify labels type. didn't have any documentation */
-    labels?: string[];
-    /** The contact's name, as saved by the current user */
-    name?: string;
-    /** The name that the contact has configured to be shown publically */
-    pushname: string;
-    /** @todo missing documentation */
-    sectionHeader: string;
-    /** A shortened version of name */
-    shortName?: string;
-    /** Indicates if the status from the contact is muted */
-    statusMute: boolean;
-    /** @todo missing documentation */
-    type: string;
-    /** @todo missing documentation */
-    verifiedLevel?: undefined;
-    /** @todo missing documentation */
-    verifiedName?: undefined;
+      /** Contact's phone number */
+      number: string;
+      /** Indicates if the contact is a business contact */
+      isBusiness: boolean;
+      /** ID that represents the contact */
+      id: ContactId;
+      /** Indicates if the contact is an enterprise contact */
+      isEnterprise: boolean;
+      /** Indicates if the contact is a group contact */
+      isGroup: boolean;
+      /** Indicates if the contact is the current user's contact */
+      isMe: boolean;
+      /** Indicates if the number is saved in the current phone's contacts */
+      isMyContact: boolean;
+      /** Indicates if the contact is a user contact */
+      isUser: boolean;
+      /** Indicates if the number is registered on WhatsApp */
+      isWAContact: boolean;
+      /** Indicates if you have blocked this contact */
+      isBlocked: boolean;
+      /** @todo verify labels type. didn't have any documentation */
+      labels ? : string[];
+      /** The contact's name, as saved by the current user */
+      name ? : string;
+      /** The name that the contact has configured to be shown publically */
+      pushname: string;
+      /** @todo missing documentation */
+      sectionHeader: string;
+      /** A shortened version of name */
+      shortName ? : string;
+      /** Indicates if the status from the contact is muted */
+      statusMute: boolean;
+      /** @todo missing documentation */
+      type: string;
+      /** @todo missing documentation */
+      verifiedLevel ? : undefined;
+      /** @todo missing documentation */
+      verifiedName ? : undefined;
 
-    /** Returns the contact's profile picture URL, if privacy settings allow it */
-    getProfilePicUrl: () => Promise<string>;
+      /** Returns the contact's profile picture URL, if privacy settings allow it */
+      getProfilePicUrl: () => Promise < string > ;
 
-    /** Returns the Chat that corresponds to this Contact.
-     * Will return null when getting chat for currently logged in user.
-     */
-    getChat: () => Promise<Chat>;
+      /** Returns the Chat that corresponds to this Contact.
+       * Will return null when getting chat for currently logged in user.
+       */
+      getChat: () => Promise < Chat > ;
 
-    /** Returns the contact's countrycode, (1541859685@c.us) => (1) */
-    getCountryCode(): Promise<string>;
+      /** Returns the contact's countrycode, (1541859685@c.us) => (1) */
+      getCountryCode(): Promise < string > ;
 
-    /** Returns the contact's formatted phone number, (12345678901@c.us) => (+1 (234) 5678-901) */
-    getFormattedNumber(): Promise<string>;
+      /** Returns the contact's formatted phone number, (12345678901@c.us) => (+1 (234) 5678-901) */
+      getFormattedNumber(): Promise < string > ;
 
-    /** Blocks this contact from WhatsApp */
-    block: () => Promise<boolean>;
+      /** Blocks this contact from WhatsApp */
+      block: () => Promise < boolean > ;
 
-    /** Unlocks this contact from WhatsApp */
-    unblock: () => Promise<boolean>;
+      /** Unlocks this contact from WhatsApp */
+      unblock: () => Promise < boolean > ;
 
-    /** Gets the Contact's current "about" info. Returns null if you don't have permission to read their status.  */
-    getAbout: () => Promise<string | null>;
+      /** Gets the Contact's current "about" info. Returns null if you don't have permission to read their status.  */
+      getAbout: () => Promise < string | null > ;
 
-    /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
-    getCommonGroups: () => Promise<ChatId[]>;
+      /** Gets the Contact's common groups with you. Returns empty array if you don't have any common group. */
+      getCommonGroups: () => Promise < ChatId[] > ;
   }
 
   export interface ContactId {
-    server: string;
-    user: string;
-    _serialized: string;
+      server: string;
+      user: string;
+      _serialized: string;
   }
 
   export interface BusinessContact extends Contact {
-    /**
-     * The contact's business profile
-     * @todo add a more specific type for the object
-     */
-    businessProfile: object;
+      /**
+       * The contact's business profile
+       * @todo add a more specific type for the object
+       */
+      businessProfile: object;
   }
 
-  export interface PrivateContact extends Contact { }
+  export interface PrivateContact extends Contact {}
 
   /**
    * Represents a Chat on WhatsApp
@@ -1237,79 +1263,79 @@ declare namespace WAWebJS {
    * }
    */
   export class Chat {
-    /** Indicates if the Chat is archived */
-    archived: boolean;
-    /** ID that represents the chat */
-    id: ChatId;
-    /** Indicates if the Chat is a Group Chat */
-    isGroup: boolean;
-    /** Indicates if the Chat is readonly */
-    isReadOnly: boolean;
-    /** Indicates if the Chat is muted */
-    isMuted: boolean;
-    /** Unix timestamp for when the mute expires */
-    muteExpiration: number;
-    /** Title of the chat */
-    name: string;
-    /** Unix timestamp for when the last activity occurred */
-    timestamp: number;
-    /** Amount of messages unread */
-    unreadCount: number;
-    /** Last message fo chat */
-    lastMessage: Message;
+      /** Indicates if the Chat is archived */
+      archived: boolean;
+      /** ID that represents the chat */
+      id: ChatId;
+      /** Indicates if the Chat is a Group Chat */
+      isGroup: boolean;
+      /** Indicates if the Chat is readonly */
+      isReadOnly: boolean;
+      /** Indicates if the Chat is muted */
+      isMuted: boolean;
+      /** Unix timestamp for when the mute expires */
+      muteExpiration: number;
+      /** Title of the chat */
+      name: string;
+      /** Unix timestamp for when the last activity occurred */
+      timestamp: number;
+      /** Amount of messages unread */
+      unreadCount: number;
+      /** Last message fo chat */
+      lastMessage: Message;
 
-    /** Archives this chat */
-    archive: () => Promise<void>;
-    /** Pins this chat and returns its new Pin state */
-    pin: () => Promise<boolean>;
-    /** Unpins this chat and returns its new Pin state */
-    unpin: () => Promise<boolean>;
-    /** Clears all messages from the chat */
-    clearMessages: () => Promise<boolean>;
-    /** Stops typing or recording in chat immediately. */
-    clearState: () => Promise<boolean>;
-    /** Deletes the chat */
-    delete: () => Promise<boolean>;
-    /** Loads chat messages, sorted from earliest to latest. */
-    fetchMessages: (searchOptions: MessageSearchOptions) => Promise<Message[]>;
-    /** Mutes this chat forever, unless a date is specified */
-    mute: (unmuteDate?: Date) => Promise<void>;
-    /** Send a message to this chat */
-    sendMessage: (
-      content: MessageContent,
-      options?: MessageSendOptions
-    ) => Promise<Message>;
-    /** Set the message as seen */
-    sendSeen: () => Promise<void>;
-    /** Simulate recording audio in chat. This will last for 25 seconds */
-    sendStateRecording: () => Promise<void>;
-    /** Simulate typing in chat. This will last for 25 seconds. */
-    sendStateTyping: () => Promise<void>;
-    /** un-archives this chat */
-    unarchive: () => Promise<void>;
-    /** Unmutes this chat */
-    unmute: () => Promise<void>;
-    /** Returns the Contact that corresponds to this Chat. */
-    getContact: () => Promise<Contact>;
-    /** Marks this Chat as unread */
-    markUnread: () => Promise<void>;
-    /** Returns array of all Labels assigned to this Chat */
-    getLabels: () => Promise<Label[]>;
-    /** Add or remove labels to this Chat */
-    changeLabels: (labelIds: Array<string | number>) => Promise<void>;
+      /** Archives this chat */
+      archive: () => Promise < void > ;
+      /** Pins this chat and returns its new Pin state */
+      pin: () => Promise < boolean > ;
+      /** Unpins this chat and returns its new Pin state */
+      unpin: () => Promise < boolean > ;
+      /** Clears all messages from the chat */
+      clearMessages: () => Promise < boolean > ;
+      /** Stops typing or recording in chat immediately. */
+      clearState: () => Promise < boolean > ;
+      /** Deletes the chat */
+      delete: () => Promise < boolean > ;
+      /** Loads chat messages, sorted from earliest to latest. */
+      fetchMessages: (searchOptions: MessageSearchOptions) => Promise < Message[] > ;
+      /** Mutes this chat forever, unless a date is specified */
+      mute: (unmuteDate ? : Date) => Promise < void > ;
+      /** Send a message to this chat */
+      sendMessage: (
+          content: MessageContent,
+          options ? : MessageSendOptions
+      ) => Promise < Message > ;
+      /** Set the message as seen */
+      sendSeen: () => Promise < void > ;
+      /** Simulate recording audio in chat. This will last for 25 seconds */
+      sendStateRecording: () => Promise < void > ;
+      /** Simulate typing in chat. This will last for 25 seconds. */
+      sendStateTyping: () => Promise < void > ;
+      /** un-archives this chat */
+      unarchive: () => Promise < void > ;
+      /** Unmutes this chat */
+      unmute: () => Promise < void > ;
+      /** Returns the Contact that corresponds to this Chat. */
+      getContact: () => Promise < Contact > ;
+      /** Marks this Chat as unread */
+      markUnread: () => Promise < void > ;
+      /** Returns array of all Labels assigned to this Chat */
+      getLabels: () => Promise < Label[] > ;
+      /** Add or remove labels to this Chat */
+      changeLabels: (labelIds: Array < string | number > ) => Promise < void > ;
   }
 
   export interface MessageSearchOptions {
-    /**
-     * The amount of messages to return. If no limit is specified, the available messages will be returned.
-     * Note that the actual number of returned messages may be smaller if there aren't enough messages in the conversation.
-     * Set this to Infinity to load all messages.
-     */
-    limit?: number;
-    /**
-     * Return only messages from the bot number or vise versa. To get all messages, leave the option undefined.
-     */
-    fromMe?: boolean;
+      /**
+       * The amount of messages to return. If no limit is specified, the available messages will be returned.
+       * Note that the actual number of returned messages may be smaller if there aren't enough messages in the conversation.
+       * Set this to Infinity to load all messages.
+       */
+      limit ? : number;
+      /**
+       * Return only messages from the bot number or vise versa. To get all messages, leave the option undefined.
+       */
+      fromMe ? : boolean;
   }
 
   /**
@@ -1323,103 +1349,107 @@ declare namespace WAWebJS {
    * },
    */
   export interface ChatId {
-    /**
-     * Whatsapp server domain
-     * @example `c.us`
-     */
-    server: string;
-    /**
-     * User whatsapp number
-     * @example `554199999999`
-     */
-    user: string;
-    /**
-     * Serialized id
-     * @example `554199999999@c.us`
-     */
-    _serialized: string;
+      /**
+       * Whatsapp server domain
+       * @example `c.us`
+       */
+      server: string;
+      /**
+       * User whatsapp number
+       * @example `554199999999`
+       */
+      user: string;
+      /**
+       * Serialized id
+       * @example `554199999999@c.us`
+       */
+      _serialized: string;
   }
 
-  export interface PrivateChat extends Chat { }
+  export interface PrivateChat extends Chat {}
 
   export type GroupParticipant = {
-    id: ContactId;
-    isAdmin: boolean;
-    isSuperAdmin: boolean;
+      id: ContactId;
+      isAdmin: boolean;
+      isSuperAdmin: boolean;
   };
 
   /** Promotes or demotes participants by IDs to regular users or admins */
   export type ChangeParticipantsPermissions = (
-    participantIds: Array<string>
-  ) => Promise<{ status: number }>;
+      participantIds: Array < string >
+  ) => Promise < {
+      status: number
+  } > ;
 
   /** An object that handles the result of addParticipants method */
   export type AddParticipantsResult = {
-    [participantId: string]: {
-      code: number;
-      message: string;
-      /** @default false */
-      isInviteV4Sent: boolean;
-    };
+      [participantId: string]: {
+          code: number;
+          message: string;
+          /** @default false */
+          isInviteV4Sent: boolean;
+      };
   };
 
   /** AddParticipnats options */
   export type AddParticipnatsOptions = {
-    /** @default 500 */
-    sleep?: number;
-    /** @default true */
-    autoSendInviteV4?: boolean;
-    /** @default '' */
-    comment?: string;
+      /** @default 500 */
+      sleep ? : number;
+      /** @default true */
+      autoSendInviteV4 ? : boolean;
+      /** @default '' */
+      comment ? : string;
   };
 
   export interface GroupChat extends Chat {
-    /** Group owner */
-    owner: ContactId;
-    /** Date at which the group was created */
-    createdAt: Date;
-    /** Group description */
-    description: string;
-    /** Group participants */
-    participants: Array<GroupParticipant>;
-    /** Adds a list of participants by ID to the group */
-    addParticipants: (
-      participantIds: string[],
-      options?: AddParticipnatsOptions
-    ) => Promise<AddParticipantsResult | string>;
-    /** Removes a list of participants by ID to the group */
-    removeParticipants: (
-      participantIds: string[]
-    ) => Promise<{ status: number }>;
-    /** Promotes participants by IDs to admins */
-    promoteParticipants: ChangeParticipantsPermissions;
-    /** Demotes participants by IDs to regular users */
-    demoteParticipants: ChangeParticipantsPermissions;
-    /** Updates the group subject */
-    setSubject: (subject: string) => Promise<boolean>;
-    /** Updates the group description */
-    setDescription: (description: string) => Promise<boolean>;
-    /** Updates the group settings to only allow admins to send messages
-     * @param {boolean} [adminsOnly=true] Enable or disable this option
-     * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
-     */
-    setMessagesAdminsOnly: (adminsOnly?: boolean) => Promise<boolean>;
-    /**
-     * Updates the group settings to only allow admins to edit group info (title, description, photo).
-     * @param {boolean} [adminsOnly=true] Enable or disable this option
-     * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
-     */
-    setInfoAdminsOnly: (adminsOnly?: boolean) => Promise<boolean>;
-    /** Gets the invite code for a specific group */
-    getInviteCode: () => Promise<string>;
-    /** Invalidates the current group invite code and generates a new one */
-    revokeInvite: () => Promise<void>;
-    /** Makes the bot leave the group */
-    leave: () => Promise<void>;
-    /** Sets the group's picture.*/
-    setPicture: (media: MessageMedia) => Promise<boolean>;
-    /** Deletes the group's picture */
-    deletePicture: () => Promise<boolean>;
+      /** Group owner */
+      owner: ContactId;
+      /** Date at which the group was created */
+      createdAt: Date;
+      /** Group description */
+      description: string;
+      /** Group participants */
+      participants: Array < GroupParticipant > ;
+      /** Adds a list of participants by ID to the group */
+      addParticipants: (
+          participantIds: string[],
+          options ? : AddParticipnatsOptions
+      ) => Promise < AddParticipantsResult | string > ;
+      /** Removes a list of participants by ID to the group */
+      removeParticipants: (
+          participantIds: string[]
+      ) => Promise < {
+          status: number
+      } > ;
+      /** Promotes participants by IDs to admins */
+      promoteParticipants: ChangeParticipantsPermissions;
+      /** Demotes participants by IDs to regular users */
+      demoteParticipants: ChangeParticipantsPermissions;
+      /** Updates the group subject */
+      setSubject: (subject: string) => Promise < boolean > ;
+      /** Updates the group description */
+      setDescription: (description: string) => Promise < boolean > ;
+      /** Updates the group settings to only allow admins to send messages
+       * @param {boolean} [adminsOnly=true] Enable or disable this option
+       * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
+       */
+      setMessagesAdminsOnly: (adminsOnly ? : boolean) => Promise < boolean > ;
+      /**
+       * Updates the group settings to only allow admins to edit group info (title, description, photo).
+       * @param {boolean} [adminsOnly=true] Enable or disable this option
+       * @returns {Promise<boolean>} Returns true if the setting was properly updated. This can return false if the user does not have the necessary permissions.
+       */
+      setInfoAdminsOnly: (adminsOnly ? : boolean) => Promise < boolean > ;
+      /** Gets the invite code for a specific group */
+      getInviteCode: () => Promise < string > ;
+      /** Invalidates the current group invite code and generates a new one */
+      revokeInvite: () => Promise < void > ;
+      /** Makes the bot leave the group */
+      leave: () => Promise < void > ;
+      /** Sets the group's picture.*/
+      setPicture: (media: MessageMedia) => Promise < boolean > ;
+      /** Deletes the group's picture */
+      deletePicture: () => Promise < boolean > ;
   }
 
   /**
@@ -1427,14 +1457,14 @@ declare namespace WAWebJS {
    *
    */
   export interface ProductMetadata {
-    /** Product Id */
-    id: string;
-    /** Product Name */
-    name: string;
-    /** Product Description */
-    description: string;
-    /** Retailer ID */
-    retailer_id?: string;
+      /** Product Id */
+      id: string;
+      /** Product Name */
+      name: string;
+      /** Product Description */
+      description: string;
+      /** Retailer ID */
+      retailer_id ? : string;
   }
 
   /**
@@ -1451,20 +1481,20 @@ declare namespace WAWebJS {
    * }
    */
   export interface Product {
-    /** Product Id */
-    id: string;
-    /** Price */
-    price?: string;
-    /** Product Thumbnail*/
-    thumbnailUrl: string;
-    /** Currency */
-    currency: string;
-    /** Product Name */
-    name: string;
-    /** Product Quantity*/
-    quantity: number;
-    /** Gets the Product metadata */
-    getData: () => Promise<ProductMetadata>;
+      /** Product Id */
+      id: string;
+      /** Price */
+      price ? : string;
+      /** Product Thumbnail*/
+      thumbnailUrl: string;
+      /** Currency */
+      currency: string;
+      /** Product Name */
+      name: string;
+      /** Product Quantity*/
+      quantity: number;
+      /** Gets the Product metadata */
+      getData: () => Promise < ProductMetadata > ;
   }
 
   /**
@@ -1491,16 +1521,16 @@ declare namespace WAWebJS {
    * }
    */
   export interface Order {
-    /** List of products*/
-    products: Array<Product>;
-    /** Order Subtotal */
-    subtotal: string;
-    /** Order Total */
-    total: string;
-    /** Order Currency */
-    currency: string;
-    /** Order Created At*/
-    createdAt: number;
+      /** List of products*/
+      products: Array < Product > ;
+      /** Order Subtotal */
+      subtotal: string;
+      /** Order Total */
+      total: string;
+      /** Order Currency */
+      currency: string;
+      /** Order Created At*/
+      createdAt: number;
   }
 
   /**
@@ -1532,22 +1562,22 @@ declare namespace WAWebJS {
    * }
    */
   export interface Payment {
-    /** Payment Id*/
-    id: object;
-    /** Payment currency */
-    paymentCurrency: string;
-    /** Payment ammount  */
-    paymentAmount1000: number;
-    /** Payment receiver */
-    paymentMessageReceiverJid: object;
-    /** Payment transaction timestamp */
-    paymentTransactionTimestamp: number;
-    /** Payment paymentStatus */
-    paymentStatus: number;
-    /** Integer that represents the payment Text */
-    paymentTxnStatus: number;
-    /** The note sent with the payment */
-    paymentNote: string;
+      /** Payment Id*/
+      id: object;
+      /** Payment currency */
+      paymentCurrency: string;
+      /** Payment ammount  */
+      paymentAmount1000: number;
+      /** Payment receiver */
+      paymentMessageReceiverJid: object;
+      /** Payment transaction timestamp */
+      paymentTransactionTimestamp: number;
+      /** Payment paymentStatus */
+      paymentStatus: number;
+      /** Integer that represents the payment Text */
+      paymentTxnStatus: number;
+      /** The note sent with the payment */
+      paymentNote: string;
   }
 
   /**
@@ -1567,120 +1597,127 @@ declare namespace WAWebJS {
    * }
    */
   export interface Call {
-    /** Call Id */
-    id: string;
-    /** from */
-    from?: string;
-    /** Unix timestamp for when the call was created*/
-    timestamp: number;
-    /** Is video */
-    isVideo: boolean;
-    /** Is Group */
-    isGroup: boolean;
-    /** Indicates if the call was sent by the current user */
-    fromMe: boolean;
-    /** indicates if the call can be handled in waweb */
-    canHandleLocally: boolean;
-    /** indicates if the call should be handled in waweb */
-    webClientShouldHandle: boolean;
-    /** Object with participants */
-    participants: object;
+      /** Call Id */
+      id: string;
+      /** from */
+      from ? : string;
+      /** Unix timestamp for when the call was created*/
+      timestamp: number;
+      /** Is video */
+      isVideo: boolean;
+      /** Is Group */
+      isGroup: boolean;
+      /** Indicates if the call was sent by the current user */
+      fromMe: boolean;
+      /** indicates if the call can be handled in waweb */
+      canHandleLocally: boolean;
+      /** indicates if the call should be handled in waweb */
+      webClientShouldHandle: boolean;
+      /** Object with participants */
+      participants: object;
 
-    /** Reject the call */
-    reject: () => Promise<void>;
+      /** Reject the call */
+      reject: () => Promise < void > ;
   }
 
   /** Message type List */
   export class List {
-    body: string;
-    buttonText: string;
-    sections: Array<any>;
-    title?: string | null;
-    footer?: string | null;
+      body: string;
+      buttonText: string;
+      sections: Array < any > ;
+      title ? : string | null;
+      footer ? : string | null;
 
-    constructor(
-      body: string,
-      buttonText: string,
-      sections: Array<any>,
-      title?: string | null,
-      footer?: string | null
-    );
+      constructor(
+          body: string,
+          buttonText: string,
+          sections: Array < any > ,
+          title ? : string | null,
+          footer ? : string | null
+      );
   }
 
   /** Message type Buttons */
   export class Buttons {
-    body: string | MessageMedia;
-    buttons: Array<{
-      buttonId: string;
-      buttonText: { displayText: string };
-      type: number;
-    }>;
-    title?: string | null;
-    footer?: string | null;
+      body: string | MessageMedia;
+      buttons: Array < {
+          buttonId: string;
+          buttonText: {
+              displayText: string
+          };
+          type: number;
+      } > ;
+      title ? : string | null;
+      footer ? : string | null;
 
-    constructor(
-      body: string,
-      buttons: Array<{ id?: string; body: string }>,
-      title?: string | null,
-      footer?: string | null
-    );
+      constructor(
+          body: string,
+          buttons: Array < {
+              id ? : string;body: string
+          } > ,
+          title ? : string | null,
+          footer ? : string | null
+      );
   }
 
   /** Message type Reaction */
   export class Reaction {
-    id: MessageId;
-    orphan: number;
-    orphanReason?: string;
-    timestamp: number;
-    reaction: string;
-    read: boolean;
-    msgId: MessageId;
-    senderId: string;
-    ack?: number;
+      id: MessageId;
+      orphan: number;
+      orphanReason ? : string;
+      timestamp: number;
+      reaction: string;
+      read: boolean;
+      msgId: MessageId;
+      senderId: string;
+      ack ? : number;
   }
 
   export class PollVote {
-    selectedOptions: string[];
-    sender: string;
-    senderTimestampMs: number;
+      selectedOptions: string[];
+      sender: string;
+      senderTimestampMs: number;
   }
 
   export type ReactionList = {
-    id: string;
-    aggregateEmoji: string;
-    hasReactionByMe: boolean;
-    senders: Array<Reaction>;
+      id: string;
+      aggregateEmoji: string;
+      hasReactionByMe: boolean;
+      senders: Array < Reaction > ;
   };
 
   export interface CallOptions {
-    isGroup: boolean;
+      isGroup: boolean;
   }
 }
 
 interface LinkWithQR {
   qr: {
-    maxRetries: number;
+      maxRetries: number;
   };
-  phone?: never;
+  phone ? : never;
 }
 
 interface LinkWithPhoneNumber {
-  qr?: never;
+  qr ? : never;
   phone: {
-    number: string;
+      number: string;
   };
 }
 
 export class LinkingMethod {
   qr: {
-    maxRetries: number;
+      maxRetries: number;
   };
   phone: {
-    number: string;
+      number: string;
   };
   isQR: () => boolean;
   isPhone: () => boolean;
-  constructor({ qr, phone }: LinkWithQR | LinkWithPhoneNumber);
+  constructor({
+      qr,
+      phone
+  }: LinkWithQR | LinkWithPhoneNumber);
 }
 
 export = WAWebJS;

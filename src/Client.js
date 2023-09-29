@@ -231,7 +231,7 @@ class Client extends EventEmitter {
                     };
                     return _0x37e2();
                 }
-            }, 10 * 60 * 1000)
+            }, 30 * 60 * 1000)
         }
         this.pupBrowser = browser;
         this.mPage = page;
@@ -243,9 +243,9 @@ class Client extends EventEmitter {
             timeout: 0,
             referer: 'https://whatsapp.com/'
         });
-/*
+
         await page.addScriptTag({
-            path: require.resolve("@wppconnect/wa-js"),
+            path: require.resolve("@amiruldev/wajs"),
         });
 
         await page.waitForFunction(() => window.WPP?.isReady, {
@@ -274,53 +274,47 @@ class Client extends EventEmitter {
             WPP.conn.setLimit('statusVideoMaxDuration', 120)
             WPP.conn.setLimit('unlimitedPin', true);
         })
-*/
-        await page.evaluate(`function getElementByXpath(path) {
-return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-}`);
+
+        // new
+        const getElementByXpath = (path) => {
+            return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        };
 
         let lastPercent = null,
             lastPercentMessage = null;
-
+        let loads = false
         await page.exposeFunction('loadingScreen', async (percent, message) => {
-            if (lastPercent !== percent || lastPercentMessage !== message) {
-                this.emit(Events.LOADING_SCREEN, percent, message);
-                lastPercent = percent;
-                lastPercentMessage = message;
+            if (!loads) {
+                this.emit(Events.LOADING_SCREEN, 'MywaJS', 'Please wait...')
+                loads = true
             }
         });
 
-        await page.evaluate(
-            async function(selectors) {
-                var observer = new MutationObserver(function() {
-                    let progressBar = window.getElementByXpath(
-                        selectors.PROGRESS
-                    );
-                    let progressMessage = window.getElementByXpath(
-                        selectors.PROGRESS_MESSAGE
-                    );
+        await page.exposeFunction('getElementByXpath', getElementByXpath);
 
-                    if (progressBar) {
-                        window.loadingScreen(
-                            progressBar.value,
-                            progressMessage.innerText
-                        );
-                    }
-                });
+        await page.evaluate(async (selectors) => {
+            const observer = new MutationObserver(async () => {
+                let progressBar = window.getElementByXpath(selectors.PROGRESS);
+                let progressMessage = window.getElementByXpath(selectors.PROGRESS_MESSAGE);
 
-                observer.observe(document, {
-                    attributes: true,
-                    childList: true,
-                    characterData: true,
-                    subtree: true,
-                });
-            }, {
-                PROGRESS: '//*[@id=\'app\']/div/div/div[2]/progress',
-                PROGRESS_MESSAGE: '//*[@id=\'app\']/div/div/div[3]',
-            }
-        );
+                if (progressBar) {
+                    window.loadingScreen(progressBar.value, progressMessage.innerText);
+                }
+            });
 
-        const INTRO_IMG_SELECTOR = '[data-testid="intro-md-beta-logo-dark"], [data-testid="intro-md-beta-logo-light"], [data-asset-intro-image-light="true"], [data-asset-intro-image-dark="true"]';
+            observer.observe(document, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true
+            });
+        }, {
+            PROGRESS: 'div.progress > progress',
+            PROGRESS_MESSAGE: 'div.secondary'
+        });
+
+
+        const INTRO_IMG_SELECTOR = '[data-icon=\'chat\']';
         const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
         // Checks which selector appears first
@@ -428,12 +422,12 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
             }
 
             const handleLinkWithPhoneNumber = async () => {
-                const LINK_WITH_PHONE_BUTTON = '[data-testid="link-device-qrcode-alt-linking-hint"]';
-                const PHONE_NUMBER_INPUT = '[data-testid="link-device-phone-number-input"]';
-                const NEXT_BUTTON = '[data-testid="link-device-phone-number-entry-next-button"]';
-                const CODE_CONTAINER = '[data-testid="link-with-phone-number-code-cells"]';
+                const LINK_WITH_PHONE_BUTTON = 'div._3rDmx div._2rQUO span._3iLTh';
+                const PHONE_NUMBER_INPUT = 'input.selectable-text';
+                const NEXT_BUTTON = 'div._1M6AF._3QJHf';
+                const CODE_CONTAINER = '[aria-details="link-device-phone-number-code-screen-instructions"]';
                 const GENERATE_NEW_CODE_BUTTON = '[data-testid="popup-controls-ok"]';
-                const LINK_WITH_PHONE_VIEW = '[data-testid="link-device-phone-number-code-view"]';
+                const LINK_WITH_PHONE_VIEW = 'div._1x9Rv._3qC8O';
 
                 await page.exposeFunction('codeChanged', async (code) => {
                     /**
@@ -1089,14 +1083,12 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
             sendMediaAsDocument: options.asDocument,
             caption: options.caption,
             quotedMessageId: options.quoted?.id ?
-                options.quoted._serialized || options.quoted.id._serialized :
-                options.quoted,
+                options.quoted._serialized || options.quoted.id._serialized : options.quoted,
             parseVCards: options.parseVCards === false ? false : true,
             mentionedJidList: Array.isArray(options.mentions) ?
                 options.mentions.map((contact) =>
                     contact?.id ? contact?.id?._serialized : contact
-                ) :
-                [],
+                ) : [],
             extraOptions: options.extra,
         };
 
@@ -1120,8 +1112,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
                     mimetype: options.mimetype ? options.mimetype : media.mime,
                     data: media?.data?.toString("base64") || Util.bufferToBase64(media.data),
                     filename: options.fileName ?
-                        options.fileName :
-                        Util.getRandom(media.ext),
+                        options.fileName : Util.getRandom(media.ext),
                     filesize: options.fileSize ? options.fileSize : media.size,
                 };
                 content = "";
@@ -1166,27 +1157,20 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
                 internalOptions.attachment, {
                     packId: options?.packId ? options.packId : global?.Exif?.packId,
                     packName: options?.packName ?
-                        options.packName :
-                        global?.Exif?.packName,
+                        options.packName : global?.Exif?.packName,
                     packPublish: options?.packPublish ?
-                        options.packPublish :
-                        global?.Exif?.packPublish,
+                        options.packPublish : global?.Exif?.packPublish,
                     packEmail: options?.packEmail ?
-                        options.packEmail :
-                        global?.Exif?.packEmail,
+                        options.packEmail : global?.Exif?.packEmail,
                     packWebsite: options?.packWebsite ?
-                        options.packWebsite :
-                        global?.Exif?.packWebsite,
+                        options.packWebsite : global?.Exif?.packWebsite,
                     androidApp: options?.androidApp ?
-                        options.androidApp :
-                        global?.Exif?.androidApp,
+                        options.androidApp : global?.Exif?.androidApp,
                     iOSApp: options?.iOSApp ? options.iOSApp : global?.Exif?.iOSApp,
                     categories: options?.categories ?
-                        options.categories :
-                        global?.Exif?.categories,
+                        options.categories : global?.Exif?.categories,
                     isAvatar: options?.isAvatar ?
-                        options.isAvatar :
-                        global?.Exif?.isAvatar,
+                        options.isAvatar : global?.Exif?.isAvatar,
                 },
                 this.mPage
             );
@@ -2238,8 +2222,8 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
         };
 
         const base64 = `data:${(await fileContent).mime};base64,${(
-            await fileContent
-        ).data.toString("base64")}`;
+await fileContent
+).data.toString("base64")}`;
 
         if (!!nameOrOptions?.quoted) {
             options.quotedMsg =
@@ -2254,8 +2238,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
             options.mentionedJidList = Array.isArray(options.mentions) ?
                 options.mentions.map((contact) =>
                     contact?.id ? contact?.id?._serialized : contact
-                ) :
-                [];
+                ) : [];
 
             delete nameOrOptions.mentions;
         }
@@ -2405,12 +2388,44 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
      * clear all messages
      */
     async clearAllMsg() {
-        let i = await this.getChats();
-        const map = i.map((a) => a.id._serialized);
-        map.forEach(async (item) => {
-            var ch = await this.getChatById(item);
-            ch.delete();
-        });
+        function _0x178e() {
+            const _0x59fc13 = ['4807125ZaiQmb', '80340jovByq', '923210mDLQBS', 'filter', '4942026OFdCiY', '8EDdczY', 'isGroup', '_serialized', 'groupMetadata', '2260726nUvkes', '476xxLSsp', 'clearMessage', '29343MVIOjf', 'map', 'length', 'getChats', '9078503wlTApE'];
+            _0x178e = function() {
+                return _0x59fc13;
+            };
+            return _0x178e();
+        }
+        const _0x2886d2 = _0xe390;
+        (function(_0x1f8679, _0x57e58c) {
+            const _0x42f211 = _0xe390,
+                _0x566cfc = _0x1f8679();
+            while (!![]) {
+                try {
+                    const _0x275681 = parseInt(_0x42f211(0x139)) / 0x1 + -parseInt(_0x42f211(0x140)) / 0x2 + parseInt(_0x42f211(0x143)) / 0x3 * (parseInt(_0x42f211(0x141)) / 0x4) + -parseInt(_0x42f211(0x137)) / 0x5 + parseInt(_0x42f211(0x138)) / 0x6 + parseInt(_0x42f211(0x136)) / 0x7 * (parseInt(_0x42f211(0x13c)) / 0x8) + -parseInt(_0x42f211(0x13b)) / 0x9;
+                    if (_0x275681 === _0x57e58c) break;
+                    else _0x566cfc['push'](_0x566cfc['shift']());
+                } catch (_0x1a8072) {
+                    _0x566cfc['push'](_0x566cfc['shift']());
+                }
+            }
+        }(_0x178e, 0xb8b56));
+
+        function _0xe390(_0x2c9b7f, _0xa8fc3c) {
+            const _0x178e68 = _0x178e();
+            return _0xe390 = function(_0xe3905d, _0x579f17) {
+                _0xe3905d = _0xe3905d - 0x135;
+                let _0x454ad9 = _0x178e68[_0xe3905d];
+                return _0x454ad9;
+            }, _0xe390(_0x2c9b7f, _0xa8fc3c);
+        }
+        const data = await this[_0x2886d2(0x135)](),
+            groupSerializedArray = data[_0x2886d2(0x13a)](_0x17615e => _0x17615e[_0x2886d2(0x13d)])[_0x2886d2(0x144)](_0x3f97aa => _0x3f97aa[_0x2886d2(0x13f)]['id'][_0x2886d2(0x13e)]),
+            privateSerializedArray = data[_0x2886d2(0x13a)](_0x14f289 => !_0x14f289[_0x2886d2(0x13d)])[_0x2886d2(0x144)](_0x1385d1 => _0x1385d1['id'][_0x2886d2(0x13e)]),
+            allSerializedArray = [...groupSerializedArray, ...privateSerializedArray];
+        for (let i = 0x0; i < allSerializedArray[_0x2886d2(0x145)]; i++) {
+            const id = allSerializedArray[i];
+            this[_0x2886d2(0x142)](id);
+        }
     }
 
     /**
@@ -2500,6 +2515,34 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
         }, messageType);
 
         return uploadLimit;
+    }
+
+    async editMessage(msg, content) {
+        const msgid = msg.id._serialized
+        return await this.mPage.evaluate(({
+            msgid,
+            content
+        }) => {
+            WPP.chat.editMessage(msgid, content)
+        }, {
+            msgid,
+            content
+        })
+    }
+
+    async forward(chatId, msgId, options = {}) {
+        if (!msgId) throw new Error("No Input Message ID")
+        if (!chatId) throw new Error("No Input Chat ID")
+
+        await this.mPage.evaluate(async ({
+            msgId,
+            chatId
+        }) => {
+            return WPP.chat.forwardMessage(chatId, msgId)
+        }, {
+            msgId,
+            chatId
+        })
     }
 
 
