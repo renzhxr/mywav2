@@ -314,30 +314,14 @@ PROGRESS_MESSAGE: 'div.secondary'
 });
 
 
-const INTRO_IMG_SELECTOR = '[class=landing-main]';
+const INTRO_IMG_SELECTOR = '[data-icon=\'search\']';
 const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
 // Checks which selector appears first
-const needAuthentication = await Promise.race([
-new Promise(resolve => {
-page.waitForSelector(INTRO_IMG_SELECTOR, {
-timeout: this.options.authTimeoutMs
-})
-.then(() => resolve(false))
-.catch((err) => resolve(err));
-}),
-new Promise(resolve => {
-page.waitForSelector(INTRO_QRCODE_SELECTOR, {
-timeout: this.options.authTimeoutMs
-})
-.then(() => resolve(true))
-.catch((err) => resolve(err));
-})
-]);
-
-// Checks if an error occurred on the first found selector. The second will be discarded and ignored by .race;
-if (needAuthentication instanceof Error) throw needAuthentication;
-
+const needAuthentication = await page.evaluate(() => {
+    let state = window.Store.AppState.state;
+    return state == 'UNPAIRED' || state == 'UNPAIRED_IDLE';
+});
 // Scan-qrcode selector was found. Needs authentication
 if (needAuthentication) {
 const {
