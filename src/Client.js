@@ -34,8 +34,7 @@ WAState,
 } from "./util/Constants.js";
 import {
 ExposeStore,
-LoadUtils,
-ExposeReadyStore
+LoadUtils
 } from "./util/Injected.js";
 import ChatFactory from "./factories/ChatFactory.js";
 import ContactFactory from "./factories/ContactFactory.js";
@@ -276,39 +275,6 @@ WPP.conn.setLimit('statusVideoMaxDuration', 120)
 WPP.conn.setLimit('unlimitedPin', true);
 })
 
-// wait till page load
-await page.waitForSelector('[class=landing-main]', { timeout: this.options.authTimeoutMs });
-
-const inject = async () => {
-await page.evaluate(ExposeStore, moduleRaid.toString()).catch(async error => {
-// These error, not as a result of injection directly, but since we use moduleRaid. nothing to do about this but do it again till it works
-if (error.message.includes('EmojiUtil') || error.message.includes('Prism') || error.message.includes('createOrUpdateReactions')) {
-await inject();
-}
-});
-};
-await inject();
-
-// Check window.Store Injection
-await page.waitForFunction('window.Store != undefined');
-
-
-await page.evaluate(async () => {
-// safely unregister service workers
-const registrations = await navigator.serviceWorker.getRegistrations();
-for (let registration of registrations) {
-registration.unregister();
-}
-});
-
-//Load util functions (serializers, helper functions)
-await page.evaluate(LoadUtils);
-
-
-// Add InterfaceController
-this.interface = new InterfaceController(this);
-
-
 // new
 const getElementByXpath = (path) => {
 return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
@@ -347,14 +313,39 @@ PROGRESS: 'div.progress > progress',
 PROGRESS_MESSAGE: 'div.secondary'
 });
 
-const needAuthentication = await page.evaluate(() => {
-let state = window.Store.AppState.state;
-return state == 'UNPAIRED' || state == 'UNPAIRED_IDLE';
-});
 
+const INTRO_IMG_SELECTOR = '[data-icon=\'search\']';
+const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
+
+// Checks which selector appears first
+const needAuthentication = await Promise.race([
+new Promise(resolve => {
+page.waitForSelector(INTRO_IMG_SELECTOR, {
+timeout: this.options.authTimeoutMs
+})
+.then(() => resolve(false))
+.catch((err) => resolve(err));
+}),
+new Promise(resolve => {
+page.waitForSelector(INTRO_QRCODE_SELECTOR, {
+timeout: this.options.authTimeoutMs
+})
+.then(() => resolve(true))
+.catch((err) => resolve(err));
+})
+]);
+
+// Checks if an error occurred on the first found selector. The second will be discarded and ignored by .race;
+if (needAuthentication instanceof Error) throw needAuthentication;
+
+// Scan-qrcode selector was found. Needs authentication
 if (needAuthentication) {
-const { failed, failureEventPayload, restart } = await this.authStrategy.onAuthenticationNeeded();
-if(failed) {
+const {
+failed,
+failureEventPayload,
+restart
+} = await this.authStrategy.onAuthenticationNeeded();
+if (failed) {
 /**
  * Emitted when there has been an error while trying to restore an existing session
  * @event Client#auth_failure
@@ -368,34 +359,69 @@ return this.initialize();
 }
 return;
 }
-// if we are logged out, print the current qr code
-/*
-await page.evaluate(() => {
-const conn = window.Store.Conn.serialize();
-window.onQRChanged(conn.ref);
-});
-*/
 
-//const handleLinkWithQRCode = async (qr) => {
+const handleLinkWithQRCode = async () => {
+const QR_CONTAINER = 'div[data-ref]';
+const QR_RETRY_BUTTON = 'div[data-ref] > span > button';
 let qrRetries = 0;
-await page.exposeFunction('onQRChanged', async (qr) => {
+await page.exposeFunction('qrChanged', async (qr) => {
 /**
-* Emitted when a QR code is received
-* @event Client#qr
-* @param {string} qr QR Code
-*/
+ * Emitted when a QR code is received
+ * @event Client#qr
+ * @param {string} qr QR Code
+ */
 this.emit(Events.QR_RECEIVED, qr);
-if (this.options.qrMaxRetries > 0) {
+if (this.options.linkingMethod.qr.maxRetries > 0) {
 qrRetries++;
-if (qrRetries > this.options.qrMaxRetries) {
-this.emit(Events.DISCONNECTED, 'Max qrcode retries reached');
+if (qrRetries > this.options.linkingMethod.qr.maxRetries) {
+this.emit(
+Events.DISCONNECTED,
+'Max qrcode retries reached'
+);
 await this.destroy();
 }
 }
 });
-//}
 
-//const handleLinkWithPhoneNumber = async () => {
+await page.evaluate(
+function(selectors) {
+const qr_container = document.querySelector(
+selectors.QR_CONTAINER
+);
+window.qrChanged(qr_container.dataset.ref);
+
+const obs = new MutationObserver((muts) => {
+muts.forEach((mut) => {
+// Listens to qr token change
+if (
+mut.type === 'attributes' &&
+mut.attributeName === 'data-ref'
+) {
+window.qrChanged(mut.target.dataset.ref);
+}
+// Listens to retry button, when found, click it
+else if (mut.type === 'childList') {
+const retry_button = document.querySelector(
+selectors.QR_RETRY_BUTTON
+);
+if (retry_button) retry_button.click();
+}
+});
+});
+obs.observe(qr_container.parentElement, {
+subtree: true,
+childList: true,
+attributes: true,
+attributeFilter: ['data-ref'],
+});
+}, {
+QR_CONTAINER,
+QR_RETRY_BUTTON,
+}
+)
+}
+
+const handleLinkWithPhoneNumber = async () => {
 const LINK_WITH_PHONE_BUTTON = 'div._3rDmx div._2rQUO span._3iLTh';
 const PHONE_NUMBER_INPUT = 'input.selectable-text';
 const NEXT_BUTTON = 'div._1M6AF._3QJHf';
@@ -505,25 +531,38 @@ CODE_CONTAINER,
 GENERATE_NEW_CODE_BUTTON,
 LINK_WITH_PHONE_VIEW
 });
-//};
+};
 
-console.log(this.options.linkingMethod.phone)
+const {
+linkingMethod
+} = this.options;
 
-const loginPhone = this.options.linkingMethod
+if (linkingMethod.isQR()) {
+await handleLinkWithQRCode();
+} else {
+await handleLinkWithPhoneNumber();
+}
 
-if (loginPhone.isQR()) {
-    console.log('You login with QR')
-    await page.evaluate(() => {
-        const conn = window.Store.Conn.serialize();
-        window.onQRChanged(conn.ref);
-    })
-  } else {
-    console.log('You login with phone')
-    await page.evaluate(() => {
-        const conn = window.Store.Conn.serialize();
-        window.codeChangedhanged(conn.ref);
-    });
-  }
+
+// Wait for code scan
+try {
+await page.waitForSelector(INTRO_IMG_SELECTOR, {
+timeout: 0
+});
+} catch (error) {
+if (
+error.name === 'ProtocolError' &&
+error.message &&
+error.message.match(/Target closed/)
+) {
+// something has called .destroy() while waiting
+return;
+}
+
+//throw error;
+console.log("Closed MywaJS")
+}
+
 }
 
 
@@ -727,44 +766,7 @@ const message = new Message(this, msg);
 this.emit(Events.MEDIA_UPLOADED, message);
 });
 
-await page.exposeFunction('onReady', (done) => {
-// if done syncing
-if (done) {
-/**
- * Emitted when the client has initialized and is ready to receive messages.
- * @event Client#ready
- */
-this.emit(Events.READY);
-this.authStrategy.afterAuthReady();
-}
-});
-
-await page.exposeFunction('onAppStateChangedEvent', async (state) => {
-if (state == 'CONNECTED') {
-const authEventPayload = await this.authStrategy.getAuthEventPayload();
-
-/**
- * Emitted when authentication is successful
- * @event Client#authenticated
- */
-this.emit(Events.AUTHENTICATED, authEventPayload);
-// Expose client info
-
-/**
- * Current connection information
- * @type {ClientInfo}
- */
-this.info = new ClientInfo(this, await page.evaluate(() => {
-return { ...window.Store.Conn.serialize(), wid: window.Store.User.getMeUser() };
-}));
-return;
-} else if (state == 'UNPAIRED_IDLE') {
-// refresh qr code
-window.Store.Cmd.refreshQR();
-
-return;
-}
-
+await page.exposeFunction("onAppStateChangedEvent", async (state) => {
 /**
  * Emitted when the connection state changes
  * @event Client#change_state
@@ -772,18 +774,19 @@ return;
  */
 this.emit(Events.STATE_CHANGED, state);
 
-const ACCEPTED_STATES = [WAState.CONNECTED, WAState.OPENING, WAState.PAIRING, WAState.TIMEOUT, WAState.UNPAIRED, WAState.UNPAIRED_IDLE];
-
-if (state == WAState.PAIRING) {
-ExposeReadyStore();
-}
+const ACCEPTED_STATES = [
+WAState.CONNECTED,
+WAState.OPENING,
+WAState.PAIRING,
+WAState.TIMEOUT,
+];
 
 if (this.options.takeoverOnConflict) {
 ACCEPTED_STATES.push(WAState.CONFLICT);
 
 if (state === WAState.CONFLICT) {
 setTimeout(() => {
-this.pupPage.evaluate(() => window.Store.AppState.takeover());
+this.mPage.evaluate(() => window.Store.AppState.takeover());
 }, this.options.takeoverTimeoutMs);
 }
 }
@@ -799,7 +802,6 @@ this.emit(Events.DISCONNECTED, state);
 this.destroy();
 }
 });
-
 
 await page.exposeFunction("onBatteryStateChangedEvent", (state) => {
 const {
@@ -876,39 +878,101 @@ this.emit(Events.MESSAGE_REACTION, new Reaction(this, reaction));
 });
 
 await page.evaluate(() => {
-window.Store.Msg.on('change', (msg) => { window.onChangeMessageEvent(window.WWebJS.getMessageModel(msg)); });
-window.Store.Msg.on('change:type', (msg) => { window.onChangeMessageTypeEvent(window.WWebJS.getMessageModel(msg)); });
-window.Store.Msg.on('change:ack', (msg, ack) => { window.onMessageAckEvent(window.WWebJS.getMessageModel(msg), ack); });
-window.Store.Msg.on('change:isUnsentMedia', (msg, unsent) => { if (msg.id.fromMe && !unsent) window.onMessageMediaUploadedEvent(window.WWebJS.getMessageModel(msg)); });
-window.Store.Msg.on('remove', (msg) => { if (msg.isNewMsg) window.onRemoveMessageEvent(window.WWebJS.getMessageModel(msg)); });
-window.Store.Msg.on('change:body', (msg, newBody, prevBody) => { window.onEditMessageEvent(window.WWebJS.getMessageModel(msg), newBody, prevBody); });
-window.Store.AppState.on('change:state', (_AppState, state) => { window.onAppStateChangedEvent(state); });
-window.Store.Conn.on('change:battery', (state) => { window.onBatteryStateChangedEvent(state); });
-window.Store.Call.on('add', (call) => { window.onIncomingCall(call); });
-window.Store.Chat.on('remove', async (chat) => { window.onRemoveChatEvent(await window.WWebJS.getChatModel(chat)); });
-window.Store.Chat.on('change:archive', async (chat, currState, prevState) => { window.onArchiveChatEvent(await window.WWebJS.getChatModel(chat), currState, prevState); });
-window.Store.Msg.on('add', (msg) => { 
+window.Store.Msg.on("change", (msg) => {
+window.onChangeMessageEvent(window.WWebJS.getMessageModel(msg));
+});
+window.Store.Msg.on("change:type", (msg) => {
+window.onChangeMessageTypeEvent(window.WWebJS.getMessageModel(msg));
+});
+window.Store.Msg.on("change:ack", (msg, ack) => {
+window.onMessageAckEvent(window.WWebJS.getMessageModel(msg), ack);
+});
+window.Store.Msg.on("change:isUnsentMedia", (msg, unsent) => {
+if (msg.id.fromMe && !unsent)
+window.onMessageMediaUploadedEvent(
+window.WWebJS.getMessageModel(msg)
+);
+});
+window.Store.Msg.on("remove", (msg) => {
+if (msg.isNewMsg)
+window.onRemoveMessageEvent(window.WWebJS.getMessageModel(msg));
+});
+window.Store.AppState.on("change:state", (_AppState, state) => {
+window.onAppStateChangedEvent(state);
+});
+window.Store.Conn.on("change:battery", (state) => {
+window.onBatteryStateChangedEvent(state);
+});
+window.Store.Call.on("add", (call) => {
+if (call.isGroup) {
+window.onIncomingCall(call);
+}
+});
+window.Store.Call.on("change:_state change:state", (call) => {
+if (call.getState() === "INCOMING_RING") {
+window.onIncomingCall(call);
+}
+});
+window.Store.Msg.on("add", (msg) => {
 if (msg.isNewMsg) {
-if(msg.type === 'ciphertext') {
+if (msg.type === "ciphertext") {
 // defer message event until ciphertext is resolved (type changed)
-msg.once('change:type', (_msg) => window.onAddMessageEvent(window.WWebJS.getMessageModel(_msg)));
+msg.once("change:type", (_msg) =>
+window.onAddMessageEvent(window.WWebJS.getMessageModel(_msg))
+);
 } else {
-window.onAddMessageEvent(window.WWebJS.getMessageModel(msg)); 
+window.onAddMessageEvent(window.WWebJS.getMessageModel(msg));
 }
 }
 });
-window.Store.Chat.on('change:unreadCount', (chat) => {window.onChatUnreadCountEvent(chat);});
-window.Store.Conn.on('change:ref', (_Conn, before, after) => {window.onQRChanged(!after ? before : after);}); // change in qr code "ref"
-window.Store.Conn.on('change:hasSynced', (_Conn, hasSynced) => {window.onReady(hasSynced);}); // have we finished syncing so that we can be "ready" ? 
 
+window.Store.PollVote.on("add", (vote) => {
+if (vote.parentMsgKey)
+vote.pollCreationMessage = window.Store.Msg.get(
+vote.parentMsgKey
+).serialize();
+window.onPollVote(vote);
 });
 
- // Disconnect when navigating away when in PAIRING state (detect logout)
- this.mPage.on('framenavigated', async () => {
+{
+const module = window.Store.createOrUpdateReactionsModule;
+const ogMethod = module.createOrUpdateReactions;
+module.createOrUpdateReactions = ((...args) => {
+window.onReaction(
+args[0].map((reaction) => {
+const msgKey = window.Store.MsgKey.fromString(reaction.msgKey);
+const parentMsgKey = window.Store.MsgKey.fromString(
+reaction.parentMsgKey
+);
+const timestamp = reaction.timestamp / 1000;
+
+return {
+...reaction,
+msgKey,
+parentMsgKey,
+timestamp,
+};
+})
+);
+
+return ogMethod(...args);
+}).bind(module);
+}
+});
+
+/**
+ * Emitted when the client has initialized and is ready to receive messages.
+ * @event Client#ready
+ */
+this.emit(Events.READY);
+this.authStrategy.afterAuthReady();
+
+// Disconnect when navigating away when in PAIRING state (detect logout)
+this.mPage.on("framenavigated", async () => {
 const appState = await this.getState();
-if(!appState || appState === WAState.PAIRING) {
+if (!appState || appState === WAState.PAIRING) {
 await this.authStrategy.disconnect();
-this.emit(Events.DISCONNECTED, 'NAVIGATION');
+this.emit(Events.DISCONNECTED, "NAVIGATION");
 await this.destroy();
 }
 });
@@ -921,7 +985,6 @@ async destroy() {
 await this.pupBrowser.close();
 await this.authStrategy.destroy();
 }
-
 /*
 #####################################
 # UPDATE FUNCTION #
