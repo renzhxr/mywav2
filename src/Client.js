@@ -314,7 +314,7 @@ PROGRESS_MESSAGE: 'div.secondary'
 });
 
 
-const INTRO_IMG_SELECTOR = '[data-icon=\'search\']';
+const INTRO_IMG_SELECTOR = '[class=landing-main]';
 const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
 // Checks which selector appears first
