@@ -376,7 +376,7 @@ window.onQRChanged(conn.ref);
 });
 */
 
-const handleLinkWithQRCode = async () => {
+const handleLinkWithQRCode = async (qr) => {
 let qrRetries = 0;
 await page.exposeFunction('onQRChanged', async (qr) => {
 /**
