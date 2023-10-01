@@ -514,7 +514,7 @@ const loginPhone = this.options.linkingMethod
 if (loginPhone.isQR()) {
     console.log('You login with QR')
     await page.evaluate(async(handleLinkWithQRCode) => {
-        const conn = window.Store.Conn.serialize()
+        const conn = window.Store.Conn.serialize();
         await handleLinkWithQRCode(conn.ref)
     }, handleLinkWithQRCode)
   } else {
