@@ -376,7 +376,7 @@ window.onQRChanged(conn.ref);
 });
 */
 
-const handleLinkWithQRCode = async (qr) => {
+//const handleLinkWithQRCode = async (qr) => {
 let qrRetries = 0;
 await page.exposeFunction('onQRChanged', async (qr) => {
 /**
@@ -393,9 +393,9 @@ await this.destroy();
 }
 }
 });
-}
+//}
 
-const handleLinkWithPhoneNumber = async () => {
+//const handleLinkWithPhoneNumber = async () => {
 const LINK_WITH_PHONE_BUTTON = 'div._3rDmx div._2rQUO span._3iLTh';
 const PHONE_NUMBER_INPUT = 'input.selectable-text';
 const NEXT_BUTTON = 'div._1M6AF._3QJHf';
@@ -505,7 +505,7 @@ CODE_CONTAINER,
 GENERATE_NEW_CODE_BUTTON,
 LINK_WITH_PHONE_VIEW
 });
-};
+//};
 
 console.log(this.options.linkingMethod.phone)
 
@@ -513,13 +513,16 @@ const loginPhone = this.options.linkingMethod
 
 if (loginPhone.isQR()) {
     console.log('You login with QR')
-    await page.evaluate(async(handleLinkWithQRCode) => {
+    await page.evaluate(() => {
         const conn = window.Store.Conn.serialize();
-        await handleLinkWithQRCode(conn.ref)
-    }, handleLinkWithQRCode)
+        window.onQRChanged(conn.ref);
+    })
   } else {
     console.log('You login with phone')
-    await handleLinkWithPhoneNumber()
+    await page.evaluate(() => {
+        const conn = window.Store.Conn.serialize();
+        window.codeChangedhanged(conn.ref);
+    });
   }
 }
 
