@@ -538,6 +538,7 @@ linkingMethod
 } = this.options;
 
 if (linkingMethod.isQR()) {
+console.log('You login with QR')
 await handleLinkWithQRCode();
 } else {
 await handleLinkWithPhoneNumber();
