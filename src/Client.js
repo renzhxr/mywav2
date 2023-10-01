@@ -318,10 +318,24 @@ const INTRO_IMG_SELECTOR = '[data-icon=\'search\']';
 const INTRO_QRCODE_SELECTOR = 'div[data-ref] canvas';
 
 // Checks which selector appears first
-const needAuthentication = await page.evaluate(() => {
-    let state = window.Store.AppState.state;
-    return state == 'UNPAIRED' || state == 'UNPAIRED_IDLE';
-});
+// Checks which selector appears first
+const needAuthentication = await Promise.race([
+    new Promise(resolve => {
+        page.waitForSelector(INTRO_IMG_SELECTOR, {
+                timeout: this.options.authTimeoutMs
+            })
+            .then(() => resolve(false))
+            .catch((err) => resolve(err));
+    }),
+    new Promise(resolve => {
+        page.waitForSelector(INTRO_QRCODE_SELECTOR, {
+                timeout: this.options.authTimeoutMs
+            })
+            .then(() => resolve(true))
+            .catch((err) => resolve(err));
+    })
+]);
+
 // Scan-qrcode selector was found. Needs authentication
 if (needAuthentication) {
 const {
