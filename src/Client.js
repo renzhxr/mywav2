@@ -201,35 +201,28 @@ PROGRESS_MESSAGE: "//*[@id='app']/div/div/div[3]",
 }
 );
 
-const INTRO_IMG_SELECTOR = "[data-icon='search']";
+const INTRO_IMG_SELECTOR = "[class=landing-main]";
 const INTRO_QRCODE_SELECTOR = "div[data-ref] canvas";
 
 // Checks which selector appears first
 const needAuthentication = await Promise.race([
 new Promise((resolve) => {
-    page
+page
 .waitForSelector(INTRO_IMG_SELECTOR, {
 timeout: this.options.authTimeoutMs,
 })
-try {
- resolve(false)
-} catch {
-  console.log('none1')
-}
-})
+.then(() => resolve(false))
+.catch((err) => resolve(err));
+}),
 new Promise((resolve) => {
 page
 .waitForSelector(INTRO_QRCODE_SELECTOR, {
 timeout: this.options.authTimeoutMs,
 })
-try {
-  resolve(true)
-} catch {
-  console.log('none2')
-}
-}
-})
-  ])
+.then(() => resolve(true))
+.catch((err) => resolve(err));
+}),
+]);
 
 // Checks if an error occurred on the first found selector. The second will be discarded and ignored by .race;
 if (needAuthentication instanceof Error) throw needAuthentication;
