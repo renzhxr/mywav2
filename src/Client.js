@@ -135,6 +135,35 @@ timeout: 0,
 referer: 'https://whatsapp.com/'
 });
 
+    await page.addScriptTag({
+      path: require.resolve("@wppconnect/wa-js"),
+    });
+
+    // Wait WA-JS load
+    await page.waitForFunction(() => window.WPP?.isReady);
+
+    await page
+      .evaluate(
+        ({ markOnlineAvailable, isBeta }) => {
+          WPP.chat.defaultSendMessageOptions.createChat = true;
+          if (markOnlineAvailable) WPP.conn.setKeepAlive(markOnlineAvailable);
+          WPP.conn.joinWebBeta(true);
+        },
+        {
+          markOnlineAvailable: this.options.markOnlineAvailable,
+          isBeta: this.options.isBeta,
+        }
+      )
+      .catch(() => false);
+
+    await page.evaluate(() => {
+      WPP.conn.setLimit("maxMediaSize", 16777216);
+      WPP.conn.setLimit("maxFileSize", 104857600);
+      WPP.conn.setLimit("maxShare", 100);
+      WPP.conn.setLimit("statusVideoMaxDuration", 120);
+      WPP.conn.setLimit("unlimitedPin", true);
+    });
+    
 await page.evaluate(`function getElementByXpath(path) {
 return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }`);
