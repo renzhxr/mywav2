@@ -212,7 +212,7 @@ page
 timeout: this.options.authTimeoutMs,
 })
 .then(() => resolve(false))
-.catch((err => console.log('error')) => resolve(err));
+.catch((err) => resolve(err));
 }),
 new Promise((resolve) => {
 page
