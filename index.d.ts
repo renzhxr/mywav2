@@ -1,7 +1,7 @@
 
 import { EventEmitter } from 'events'
 import { RequestInit } from 'node-fetch'
-import * as playwright from 'playwright-chromium'
+import * as puppeteer from 'puppeteer'
 
 declare namespace WAWebJS {
 
@@ -11,11 +11,11 @@ declare namespace WAWebJS {
         /** Current connection information */
         public info: ClientInfo
 
-        /** playwright page running WhatsApp Web */
-        pupPage?: playwright.Page
+        /** Puppeteer page running WhatsApp Web */
+        pupPage?: puppeteer.Page
 
-        /** playwright browser running WhatsApp Web */
-        pupBrowser?: playwright.Browser
+        /** Puppeteer browser running WhatsApp Web */
+        pupBrowser?: puppeteer.Browser
 
         /**Accepts an invitation to join a group */
         acceptInvite(inviteCode: string): Promise<string>
@@ -381,11 +381,11 @@ declare namespace WAWebJS {
 
     /** Options for initializing the whatsapp client */
     export interface ClientOptions {
-        /** Timeout for authentication selector in playwright
+        /** Timeout for authentication selector in puppeteer
          * @default 0 */
         authTimeoutMs?: number,
-        /** playwright launch options. View docs here: https://github.com/playwright/playwright/ */
-        playwright?: playwright.playwrightNodeLaunchOptions & playwright.ConnectOptions
+        /** Puppeteer launch options. View docs here: https://github.com/puppeteer/puppeteer/ */
+        puppeteer?: puppeteer.PuppeteerNodeLaunchOptions & puppeteer.ConnectOptions
 		/** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
         authStrategy?: AuthStrategy,
         /** The version of WhatsApp Web to use. Use options.webVersionCache to configure how the version is retrieved. */
@@ -413,7 +413,7 @@ declare namespace WAWebJS {
         /** How much time to wait before taking over the session
          * @default 0 */
         takeoverTimeoutMs?: number,
-        /** User agent to use in playwright.
+        /** User agent to use in puppeteer.
          * @default 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36' */
         userAgent?: string
         /** Ffmpeg path to use when formating videos to webp while sending stickers 

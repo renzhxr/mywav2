@@ -37,7 +37,7 @@
     "node-webpmux": "^3.1.0",
     "os": "^0.1.2",
     "path": "^0.12.7",
-    "playwright-chromium": "latest",
+    "puppeteer": "^13.0.0",
     "v8": "^0.1.0"
   },
   "devDependencies": {
