@@ -209,10 +209,10 @@ const needAuthentication = await Promise.race([
 new Promise((resolve) => {
 page
 .waitForSelector(INTRO_IMG_SELECTOR, {
-timeout: 0,
+timeout: this.options.authTimeoutMs,
 })
 .then(() => resolve(false))
-.catch((err) => resolve(err));
+.catch((err => console.log('error')) => resolve(err));
 }),
 new Promise((resolve) => {
 page
