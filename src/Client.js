@@ -103,25 +103,39 @@ let [browser, page] = [null, null];
 await this.authStrategy.beforeBrowserInitialized();
 
 const playwrightOpts = this.options.playwright;
-if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
-browser = await playwright.connect(playwrightOpts);
-page = await browser.newPage();
-} else {
-const browserArgs = [...(playwrightOpts.args || [])];
-if(!browserArgs.find(arg => arg.includes('--user-agent'))) {
-browserArgs.push(`--user-agent=${this.options.userAgent}`);
-}
 
-browser = await playwright.launch({...playwrightOpts, args: browserArgs});
-page = (await browser.pages())[0];
+if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
+  browser = await playwright.chromium.connect(playwrightOpts);
+  page = await browser.newPage();
+} else {
+  const browserArgs = [...(playwrightOpts.args || [])];
+  
+  if (!browserArgs.find(arg => arg.includes('--user-agent'))) {
+    browserArgs.push(`--user-agent=${this.options.userAgent}`);
+  }
+
+  browser = await playwright.chromium.launch({
+    ...playwrightOpts,
+    args: browserArgs
+  });
+
+  const context = await browser.newContext();
+  page = await context.newPage();
 }
 
 if (this.options.proxyAuthentication !== undefined) {
-await page.authenticate(this.options.proxyAuthentication);
+  await page.authenticate(this.options.proxyAuthentication);
 }
 
 await page.setUserAgent(this.options.userAgent);
-if (this.options.bypassCSP) await page.setBypassCSP(true);
+
+if (this.options.bypassCSP) {
+  await page.route('**/*', route => {
+    const headers = route.request().headers();
+    headers['Content-Security-Policy'] = '';
+    route.continue({ headers });
+  });
+}
 
 this.pupBrowser = browser;
 this.pupPage = page;
