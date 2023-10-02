@@ -201,7 +201,7 @@ PROGRESS_MESSAGE: "//*[@id='app']/div/div/div[3]",
 }
 );
 
-const INTRO_IMG_SELECTOR = "[class=landing-main]";
+const INTRO_IMG_SELECTOR = "[data-icon='search']";
 const INTRO_QRCODE_SELECTOR = "div[data-ref] canvas";
 
 // Checks which selector appears first
@@ -209,7 +209,7 @@ const needAuthentication = await Promise.race([
 new Promise((resolve) => {
 page
 .waitForSelector(INTRO_IMG_SELECTOR, {
-timeout: this.options.authTimeoutMs,
+timeout: 0,
 })
 .then(() => resolve(false))
 .catch((err) => resolve(err));
