@@ -1,16 +1,7 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-import PrivateChat from '../structures/PrivateChat.js';
-import GroupChat from '../structures/GroupChat.js';
+const PrivateChat = require('../structures/PrivateChat');
+const GroupChat = require('../structures/GroupChat');
 
 class ChatFactory {
     static create(client, data) {
@@ -22,4 +13,4 @@ class ChatFactory {
     }
 }
 
-export default ChatFactory;
+module.exports = ChatFactory;

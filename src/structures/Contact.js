@@ -1,15 +1,6 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-import Base from './Base.js';
+const Base = require('./Base');
 
 /**
  * ID that represents a contact
@@ -163,11 +154,12 @@ class Contact extends Base {
     async block() {
         if(this.isGroup) return false;
 
-        await this.client.mPage.evaluate(async (contactId) => {
+        await this.client.pupPage.evaluate(async (contactId) => {
             const contact = window.Store.Contact.get(contactId);
-            await window.Store.BlockContact.blockContact(contact);
+            await window.Store.BlockContact.blockContact({contact});
         }, this.id._serialized);
 
+        this.isBlocked = true;
         return true;
     }
 
@@ -178,11 +170,12 @@ class Contact extends Base {
     async unblock() {
         if(this.isGroup) return false;
 
-        await this.client.mPage.evaluate(async (contactId) => {
+        await this.client.pupPage.evaluate(async (contactId) => {
             const contact = window.Store.Contact.get(contactId);
             await window.Store.BlockContact.unblockContact(contact);
         }, this.id._serialized);
 
+        this.isBlocked = false;
         return true;
     }
 
@@ -191,7 +184,7 @@ class Contact extends Base {
      * @returns {Promise<?string>}
      */
     async getAbout() {
-        const about = await this.client.mPage.evaluate(async (contactId) => {
+        const about = await this.client.pupPage.evaluate(async (contactId) => {
             const wid = window.Store.WidFactory.createWid(contactId);
             return window.Store.StatusUtils.getStatus(wid);
         }, this.id._serialized);
@@ -212,4 +205,4 @@ class Contact extends Base {
     
 }
 
-export default Contact;
+module.exports = Contact;

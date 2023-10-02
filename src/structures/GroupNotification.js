@@ -1,15 +1,6 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-import Base from './Base.js';
+const Base = require('./Base');
 
 /**
  * Represents a GroupNotification on WhatsApp
@@ -48,12 +39,6 @@ class GroupNotification extends Base {
         this.timestamp = data.t;
 
         /**
-         * timestamp for ephemeral duration
-         * @type {number}
-         */
-        if (this.type === 'ephemeral') this.ephemeralDuration = Array.isArray(data.templateParams) ? data.templateParams[0] : data.templateParams; 
-
-        /**
          * ID for the Chat that this groupNotification was sent for.
          * 
          * @type {string}
@@ -65,11 +50,6 @@ class GroupNotification extends Base {
          * @type {string}
          */
         this.author = typeof (data.author) === 'object' ? data.author._serialized : data.author;
-
-        /**
-         * @type {Array}
-         */
-        this.templateParams = Array.isArray(data.templateParams) && data.templateParams || []
         
         /**
          * Contact IDs for the users that were affected by this GroupNotification.
@@ -121,4 +101,4 @@ class GroupNotification extends Base {
     
 }
 
-export default GroupNotification;
+module.exports = GroupNotification;

@@ -1,17 +1,8 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-import path from 'path';
-import fs from 'fs';
-import BaseAuthStrategy from './BaseAuthStrategy.js';
+const path = require('path');
+const fs = require('fs');
+const BaseAuthStrategy = require('./BaseAuthStrategy');
 
 /**
  * Local directory-based authentication
@@ -20,31 +11,31 @@ import BaseAuthStrategy from './BaseAuthStrategy.js';
  * @param {string} options.dataPath - Change the default path for saving session files, default is: "./.wwebjs_auth/" 
 */
 class LocalAuth extends BaseAuthStrategy {
-    constructor({ clientId, dataPath } = {}) {
+    constructor({ clientId, dataPath }={}) {
         super();
 
         const idRegex = /^[-_\w]+$/i;
-        if (clientId && !idRegex.test(clientId)) {
+        if(clientId && !idRegex.test(clientId)) {
             throw new Error('Invalid clientId. Only alphanumeric characters, underscores and hyphens are allowed.');
         }
 
-        this.dataPath = path.resolve(dataPath || './.mywajs_auth/');
+        this.dataPath = path.resolve(dataPath || './.wwebjs_auth/');
         this.clientId = clientId;
     }
 
     async beforeBrowserInitialized() {
-        const playwrightOpts = this.client.options.playwright;
+        const puppeteerOpts = this.client.options.puppeteer;
         const sessionDirName = this.clientId ? `session-${this.clientId}` : 'session';
         const dirPath = path.join(this.dataPath, sessionDirName);
 
-        if (playwrightOpts.userDataDir && playwrightOpts.userDataDir !== dirPath) {
+        if(puppeteerOpts.userDataDir && puppeteerOpts.userDataDir !== dirPath) {
             throw new Error('LocalAuth is not compatible with a user-supplied userDataDir.');
         }
 
         fs.mkdirSync(dirPath, { recursive: true });
-
-        this.client.options.playwright = {
-            ...playwrightOpts,
+        
+        this.client.options.puppeteer = {
+            ...puppeteerOpts,
             userDataDir: dirPath
         };
 
@@ -53,12 +44,10 @@ class LocalAuth extends BaseAuthStrategy {
 
     async logout() {
         if (this.userDataDir) {
-            try {
-                return (fs.rmSync ? fs.rmSync : fs.rmdirSync).call(this, this.userDataDir, { recursive: true });
-            } catch { }
+            return (fs.rmSync ? fs.rmSync : fs.rmdirSync).call(this, this.userDataDir, { recursive: true, force: true });
         }
     }
 
 }
 
-export default LocalAuth;
+module.exports = LocalAuth;

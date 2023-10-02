@@ -1,16 +1,7 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-import Base from './Base.js';
-import Message from './Message.js';
+const Base = require('./Base');
+const Message = require('./Message');
 
 /**
  * Represents a Chat on WhatsApp
@@ -84,6 +75,12 @@ class Chat extends Base {
          */
         this.muteExpiration = data.muteExpiration;
 
+        /**
+         * Last message fo chat
+         * @type {Message}
+         */
+        this.lastMessage = data.lastMessage ? new Message(super.client, data.lastMessage) : undefined;
+        
         return super._patch(data);
     }
 
@@ -110,7 +107,7 @@ class Chat extends Base {
      * @returns {Promise<Boolean>} result
      */
     async clearMessages() {
-        return this.client.mPage.evaluate(chatId => {
+        return this.client.pupPage.evaluate(chatId => {
             return window.WWebJS.sendClearChat(chatId);
         }, this.id._serialized);
     }
@@ -120,7 +117,7 @@ class Chat extends Base {
      * @returns {Promise<Boolean>} result
      */
     async delete() {
-        return this.client.mPage.evaluate(chatId => {
+        return this.client.pupPage.evaluate(chatId => {
             return window.WWebJS.sendDeleteChat(chatId);
         }, this.id._serialized);
     }
@@ -171,21 +168,6 @@ class Chat extends Base {
     }
 
     /**
-     * temporary this chat forever, unless a date is specified
-     * @param {?Date} ephemeralDuration Date at which the Chat will be temporary
-     */
-    async ephemeral(ephemeralDuration) {
-        return this.client.setEphemeral(this.id._serialized, ephemeralDuration)
-    }
-
-    /**
-     * Unmutes this chat
-     */
-    async unmute() {
-        return this.client.muteChat(this.id._serialized, false);
-    }
-
-    /**
      * Mark this chat as unread
      */
     async markUnread(){
@@ -200,12 +182,12 @@ class Chat extends Base {
      * @returns {Promise<Array<Message>>}
      */
     async fetchMessages(searchOptions) {
-        let messages = await this.client.mPage.evaluate(async ({ chatId, searchOptions }) => {
+        let messages = await this.client.pupPage.evaluate(async (chatId, searchOptions) => {
             const msgFilter = (m) => {
                 if (m.isNotification) {
                     return false; // dont include notification messages
                 }
-                if (searchOptions && searchOptions.fromMe && m.id.fromMe !== searchOptions.fromMe) {
+                if (searchOptions && searchOptions.fromMe !== undefined && m.id.fromMe !== searchOptions.fromMe) {
                     return false;
                 }
                 return true;
@@ -229,7 +211,7 @@ class Chat extends Base {
 
             return msgs.map(m => window.WWebJS.getMessageModel(m));
 
-        }, { chatId: this.id._serialized, searchOptions });
+        }, this.id._serialized, searchOptions);
 
         return messages.map(m => new Message(this.client, m));
     }
@@ -238,7 +220,7 @@ class Chat extends Base {
      * Simulate typing in chat. This will last for 25 seconds.
      */
     async sendStateTyping() {
-        return this.client.mPage.evaluate(chatId => {
+        return this.client.pupPage.evaluate(chatId => {
             window.WWebJS.sendChatstate('typing', chatId);
             return true;
         }, this.id._serialized);
@@ -248,7 +230,7 @@ class Chat extends Base {
      * Simulate recording audio in chat. This will last for 25 seconds.
      */
     async sendStateRecording() {
-        return this.client.mPage.evaluate(chatId => {
+        return this.client.pupPage.evaluate(chatId => {
             window.WWebJS.sendChatstate('recording', chatId);
             return true;
         }, this.id._serialized);
@@ -258,7 +240,7 @@ class Chat extends Base {
      * Stops typing or recording in chat immediately.
      */
     async clearState() {
-        return this.client.mPage.evaluate(chatId => {
+        return this.client.pupPage.evaluate(chatId => {
             window.WWebJS.sendChatstate('stop', chatId);
             return true;
         }, this.id._serialized);
@@ -279,23 +261,15 @@ class Chat extends Base {
     async getLabels() {
         return this.client.getChatLabels(this.id._serialized);
     }
-    
-    /**
-     * 
-     * @param {String} type
-     * @returns {Promise<void>} 
-     */
-    async reportBlockClear(type = 'AccountInfoReport') {
-        await this.client.mPage.evaluate(async ({ chatId, type }) => {
-            const Wid = window.Store.WidFactory.createWid(chatId)
-            const chat = window.Store.Chat.get(Wid)
 
-            const SpamFlow = window.Store.SpamFlow
-            if (!(type in SpamFlow)) throw `Type Not Found\n\n${Object.keys(SpamFlow).join('\n')}`
-            
-            return await window.Store.GroupUtils.sendSpamBlockClear(chat, SpamFlow[type])
-        }, { chatId: this.id._serialized, type })
+    /**
+     * Add or remove labels to this Chat
+     * @param {Array<number|string>} labelIds
+     * @returns {Promise<void>}
+     */
+    async changeLabels(labelIds) {
+        return this.client.addOrRemoveLabels(labelIds, [this.id._serialized]);
     }
 }
 
-export default Chat;
+module.exports = Chat;

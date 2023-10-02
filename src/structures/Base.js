@@ -1,12 +1,3 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
 /**
@@ -28,4 +19,4 @@ class Base {
     _patch(data) { return data; }
 }
 
-export default Base
+module.exports = Base;

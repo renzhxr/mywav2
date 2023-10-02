@@ -1,40 +1,32 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-export { default as Client } from './src/Client.js';
+const Constants = require('./src/util/Constants');
 
-// Structures
-export {
-    Chat,
-    PrivateChat,
-    GroupChat,
-    Message,
-    MessageMedia,
-    Contact,
-    PrivateContact,
-    BusinessContact,
-    ClientInfo,
-    Location,
-    ProductMetadata,
-    List,
-    Buttons,
-    PollVote,
-    Call,
-    LinkingMethod
-} from './src/structures/index.js';
+module.exports = {
+    Client: require('./src/Client'),
+    
+    version: require('./package.json').version,
 
-// Auth Strategies
-export { default as NoAuth } from './src/authStrategies/NoAuth.js'
-export { default as LocalAuth } from './src/authStrategies/LocalAuth.js'
-export { default as RemoteAuth } from './src/authStrategies/RemoteAuth.js'
-export { default as LegacySessionAuth } from './src/authStrategies/LegacySessionAuth.js'
-
-export * from './src/util/Constants.js';
+    // Structures
+    Chat: require('./src/structures/Chat'),
+    PrivateChat: require('./src/structures/PrivateChat'),
+    GroupChat: require('./src/structures/GroupChat'),
+    Message: require('./src/structures/Message'),
+    MessageMedia: require('./src/structures/MessageMedia'),
+    Contact: require('./src/structures/Contact'),
+    PrivateContact: require('./src/structures/PrivateContact'),
+    BusinessContact: require('./src/structures/BusinessContact'),
+    ClientInfo: require('./src/structures/ClientInfo'),
+    Location: require('./src/structures/Location'),
+    ProductMetadata: require('./src/structures/ProductMetadata'),
+    List: require('./src/structures/List'),
+    Buttons: require('./src/structures/Buttons'),
+    
+    // Auth Strategies
+    NoAuth: require('./src/authStrategies/NoAuth'),
+    LocalAuth: require('./src/authStrategies/LocalAuth'),
+    RemoteAuth: require('./src/authStrategies/RemoteAuth'),
+    LegacySessionAuth: require('./src/authStrategies/LegacySessionAuth'),
+    LinkingMethod: require('./src/authStrategies/LinkingMethod'),
+    ...Constants
+};

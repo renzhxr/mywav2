@@ -1,48 +1,17 @@
-/*
- * MywaJS 2023
- * re-developed wwebjs
- * using with playwright & wajs
- * contact:
- * wa: 085157489446
- * ig: amirul.dev
- */
-
 'use strict';
 
-import Util from '../util/Util.js';
-
-/**
- * Section spec used in List constructor
- * @typedef {Object} SectionSpec
- * @property {string=} title - The title of the section, can be empty on the first section only.
- * @property {RowSpec[]} rows - The rows of the section.
- */
-
-/**
- * Row spec used in List constructor
- * @typedef {Object} RowSpec
- * @property {string} title - The text to show on the row.
- * @property {string=} id - Custom ID to set on the row. A random one will be generated if one is not passed.
- * @property {string=} description - Custom description for the row, will appear after clicked in the list response message (appended)
- */
-
-/**
- * Formatted section spec
- * @typedef {Object} FormattedSectionSpec
- * @property {string} title
- * @property {{rowId: string; title: string; description: string}[]} rows
- */
+const Util = require('../util/Util');
 
 /**
  * Message type List
  */
 class List {
     /**
-     * @param {string} body - A text body, no media.
-     * @param {string} buttonText - The text to put on the click to open button.
-     * @param {Array<SectionSpec>} sections - The sections of the list
-     * @param {string?} title - Custom boldfaced title property
-     * @param {string?} footer - Custom footer added in a small font to the end of the message
+     * @param {string} body
+     * @param {string} buttonText
+     * @param {Array<any>} sections
+     * @param {string?} title
+     * @param {string?} footer
      */
     constructor(body, buttonText, sections, title, footer) {
         /**
@@ -80,28 +49,23 @@ class List {
     
     /**
      * Creates section array from simple array
-     * @param {Array<SectionSpec>} sections
-     * @returns {Array<FormattedSectionSpec>}
+     * @param {Array<any>} sections
+     * @returns {Array<any>}
+     * @example
+     * Input: [{title:'sectionTitle',rows:[{id:'customId', title:'ListItem2', description: 'desc'},{title:'ListItem2'}]}}]
+     * Returns: [{'title':'sectionTitle','rows':[{'rowId':'customId','title':'ListItem1','description':'desc'},{'rowId':'oGSRoD','title':'ListItem2','description':''}]}]
      */
-    _format(sections) {
-        if(!sections.length) {
-            throw '[LT02] List without sections';
-        }
-        if(sections.length > 1 && sections.filter(section => (typeof section.title == 'undefined' )|| section.title == '' ).length > 1) {
-            throw '[LT05] You can\'t have more than one empty title.';
-        }
-        return sections.map((section, index) => {
-            if(!section.rows.length) {
-                throw '[LT03] Section without rows';
-            }
+    _format(sections){
+        if(!sections.length){throw '[LT02] List without sections';}
+        if(sections.length > 1 && sections.filter(s => typeof s.title == 'undefined').length > 1){throw '[LT05] You can\'t have more than one empty title.';}
+        return sections.map( (section) =>{
+            if(!section.rows.length){throw '[LT03] Section without rows';}
             return {
                 title: section.title ? section.title : undefined,
-                rows: section.rows.map((row, rowIndex) => {
-                    if (!row.title) {
-                        throw `[LT04] Row without title at section index ${index} and row index ${rowIndex}`;
-                    }
+                rows: section.rows.map( (row) => {
+                    if(!row.title){throw '[LT04] Row without title';}
                     return {
-                        rowId: row.id ? row.id : Util.generateHash(8),
+                        rowId: row.id ? row.id : Util.generateHash(6),
                         title: row.title,
                         description: row.description ? row.description : ''
                     };
@@ -112,4 +76,4 @@ class List {
     
 }
 
-export default List;
+module.exports = List;
