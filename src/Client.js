@@ -130,8 +130,13 @@ if (this.options.proxyAuthentication !== undefined) {
 await page.authenticate(this.options.proxyAuthentication);
 }
 
-await page.setUserAgent(this.options.userAgent);
-if (this.options.bypassCSP) await page.setBypassCSP(true);
+if (this.options.userAgent) {
+    await page.setExtraHTTPHeaders({
+      "User-Agent": this.options.userAgent,
+    });
+  }
+
+  if (this.options.bypassCSP) await page.setBypassCSP(true);
 
 this.pupBrowser = browser;
 this.pupPage = page;
