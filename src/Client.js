@@ -508,7 +508,8 @@ return operator === ">"
 };
 });
 
-await page.evaluate({ExposeStore, moduleRaid.toString()});
+await page.evaluate(({ExposeStore, moduleRaid}) => {
+  }, {ExposeStore, moduleRaid});
 const authEventPayload = await this.authStrategy.getAuthEventPayload();
 
 /**
