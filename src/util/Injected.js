@@ -106,7 +106,9 @@ exports.ExposeStore = (moduleRaidStr) => {
 };
 
 exports.LoadUtils = () => {
-    window.WWebJS = {};
+   window.WWebJS = {
+...WPP
+   }
 
     window.WWebJS.sendSeen = async (chatId) => {
         let chat = window.Store.Chat.get(chatId);
