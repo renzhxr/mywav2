@@ -1,7 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
-const puppeteer = require('puppeteer');
+const playwright = require('playwright-chromium');
 const moduleRaid = require('@pedroslopez/moduleraid/moduleraid');
 
 const Util = require('./util/Util');
@@ -23,14 +23,14 @@ const LinkingMethod = require('./authStrategies/LinkingMethod');
  * @param {AuthStrategy} options.authStrategy - Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used.
  * @param {string} options.webVersion - The version of WhatsApp Web to use. Use options.webVersionCache to configure how the version is retrieved.
  * @param {object} options.webVersionCache - Determines how to retrieve the WhatsApp Web version. Defaults to a local cache (LocalWebCache) that falls back to latest if the requested version is not found.
- * @param {number} options.authTimeoutMs - Timeout for authentication selector in puppeteer
- * @param {object} options.puppeteer - Puppeteer launch options. View docs here: https://github.com/puppeteer/puppeteer/
+ * @param {number} options.authTimeoutMs - Timeout for authentication selector in playwright
+ * @param {object} options.playwright - playwright launch options. View docs here: https://github.com/playwright/playwright/
  * @param {number} options.qrMaxRetries - How many times should the qrcode be refreshed before giving up
  * @param {string} options.restartOnAuthFail- @deprecated This option should be set directly on the LegacySessionAuth.
  * @param {object} options.session - @deprecated Only here for backwards-compatibility. You should move to using LocalAuth, or set the authStrategy to LegacySessionAuth explicitly. 
  * @param {number} options.takeoverOnConflict - If another whatsapp web session is detected (another browser), take over the session in the current browser
  * @param {number} options.takeoverTimeoutMs - How much time to wait before taking over the session
- * @param {string} options.userAgent - User agent to use in puppeteer
+ * @param {string} options.userAgent - User agent to use in playwright
  * @param {string} options.ffmpegPath - Ffmpeg path to use when formating videos to webp while sending stickers 
  * @param {boolean} options.bypassCSP - Sets bypassing of page's Content-Security-Policy.
  * @param {object} options.proxyAuthentication - Proxy Authentication object.
@@ -102,17 +102,17 @@ let [browser, page] = [null, null];
 
 await this.authStrategy.beforeBrowserInitialized();
 
-const puppeteerOpts = this.options.puppeteer;
-if (puppeteerOpts && puppeteerOpts.browserWSEndpoint) {
-browser = await puppeteer.connect(puppeteerOpts);
+const playwrightOpts = this.options.playwright;
+if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
+browser = await playwright.connect(playwrightOpts);
 page = await browser.newPage();
 } else {
-const browserArgs = [...(puppeteerOpts.args || [])];
+const browserArgs = [...(playwrightOpts.args || [])];
 if(!browserArgs.find(arg => arg.includes('--user-agent'))) {
 browserArgs.push(`--user-agent=${this.options.userAgent}`);
 }
 
-browser = await puppeteer.launch({...puppeteerOpts, args: browserArgs});
+browser = await playwright.launch({...playwrightOpts, args: browserArgs});
 page = (await browser.pages())[0];
 }
 
