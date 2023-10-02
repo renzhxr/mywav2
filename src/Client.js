@@ -93,7 +93,7 @@ if (!browserArgs.find((arg) => arg.includes("--user-agent"))) {
 browserArgs.push(`--user-agent=${this.options.userAgent}`);
 }
 
-browser = await playwright.chromium.launch({...playwrightOpts, args: browserArgs});
+browser = await playwright.chromium.launchPersistentContext({...playwrightOpts, args: browserArgs});
 page = (await browser.pages())[0];
 }
 
