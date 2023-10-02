@@ -109,9 +109,8 @@ if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
   page = await browser.newPage();
 } else {
   const browserArgs = [...(playwrightOpts.args || [])];
-  
-  if (!browserArgs.find(arg => arg.includes('--user-agent'))) {
-    browserArgs.push(`--user-agent=${this.options.userAgent}`);
+      if (!browserArgs.find((arg) => arg.includes("--user-agent"))) {
+        browserArgs.push(`--user-agent=${this.options.userAgent}`);
   }
 
   browser = await playwright.chromium.launch({
