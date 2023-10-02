@@ -206,23 +206,9 @@ const INTRO_QRCODE_SELECTOR = "div[data-ref] canvas";
 
 // Checks which selector appears first
 const needAuthentication = await Promise.race([
-new Promise((resolve) => {
-page
-.waitForSelector(INTRO_IMG_SELECTOR, {
-timeout: this.options.authTimeoutMs,
-})
-.then(() => resolve(false))
-.catch((err) => resolve(err));
-}),
-new Promise((resolve) => {
-page
-.waitForSelector(INTRO_QRCODE_SELECTOR, {
-timeout: this.options.authTimeoutMs,
-})
-.then(() => resolve(true))
-.catch((err) => resolve(err));
-}),
-]);
+    waitForSelectorPromise(page, INTRO_IMG_SELECTOR, this.options.authTimeoutMs),
+    waitForSelectorPromise(page, INTRO_QRCODE_SELECTOR, this.options.authTimeoutMs)
+  ])
 
 // Checks if an error occurred on the first found selector. The second will be discarded and ignored by .race;
 if (needAuthentication instanceof Error) throw needAuthentication;
