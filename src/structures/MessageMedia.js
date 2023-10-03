@@ -95,7 +95,7 @@ class MessageMedia {
         }
 
         const res = options.client
-            ? (await options.client.pupPage.evaluate(fetchData, url, options.reqOptions))
+            ? (await options.client.mPage.evaluate(fetchData, url, options.reqOptions))
             : (await fetchData(url, options.reqOptions));
 
         const filename = options.filename ||
