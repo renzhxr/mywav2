@@ -94,7 +94,7 @@ const playwrightOpts = this.options.playwright;
       browserArgs.push(`--user-agent=${this.options.userAgent}`);
     }
 
-    browser = await playwright.chromium.launch({...playwrightOpts, args: browserArgs});
+    browser = await launchPersistentContext('.mywajs_auth', {...playwrightOpts, args: browserArgs});
     page = await browser.newPage();
   }
 
