@@ -120,7 +120,7 @@ class Client extends EventEmitter {
     this.mPage = page;
 
     await this.authStrategy.afterBrowserInitialized();
-    await this.initWebVersionCache();
+    // await this.initWebVersionCache();
 
     await page.goto(WhatsWebURL, {
       waitUntil: "load",
@@ -954,7 +954,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
       }
     });
   }
-
+  /*
   async initWebVersionCache() {
     const { type: webCacheType, ...webCacheOptions } =
       this.options.webVersionCache;
@@ -987,6 +987,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
       });
     }
   }
+*/
 
   /**
    * Closes the client
@@ -1219,7 +1220,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
    */
   async searchMessages(query, options = {}) {
     const messages = await this.mPage.evaluate(
-      async ({query, page, count, remote}) => {
+      async ({ query, page, count, remote }) => {
         const { messages } = await window.Store.Msg.search(
           query,
           page,
@@ -1227,11 +1228,12 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
           remote
         );
         return messages.map((msg) => window.WWebJS.getMessageModel(msg));
-      }, {
-      query,
-      page,
-      count,
-      remote
+      },
+      {
+        query,
+        page,
+        count,
+        remote,
       }
     );
 
@@ -1487,10 +1489,9 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
       async (chatId, timestamp) => {
         let chat = await window.Store.Chat.get(chatId);
         await chat.mute.mute({ expiration: timestamp, sendDevice: !0 });
-      }, 
+      },
       chatId,
       unmuteDate || -1
-      
     );
   }
 
@@ -1651,7 +1652,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
     }
 
     const createRes = await this.mPage.evaluate(
-      async ({name, participantIds}) => {
+      async ({ name, participantIds }) => {
         const participantWIDs = participantIds.map((p) =>
           window.Store.WidFactory.createWid(p)
         );
@@ -1660,9 +1661,10 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
           participantWIDs,
           0
         );
-      }, {
-      name,
-      participants
+      },
+      {
+        name,
+        participants,
       }
     );
 
@@ -1759,12 +1761,10 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
    */
   async setProfilePicture(media) {
     const success = await this.mPage.evaluate(
-      ({chatid, media}) => {
+      ({ chatid, media }) => {
         return window.WWebJS.setPicture(chatid, media);
       },
-      { chatid: this.info.wid._serialized,
-      media
-      }
+      { chatid: this.info.wid._serialized, media }
     );
 
     return success;
@@ -1790,7 +1790,7 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
    */
   async addOrRemoveLabels(labelIds, chatIds) {
     return this.mPage.evaluate(
-      async ({labelIds, chatIds}) => {
+      async ({ labelIds, chatIds }) => {
         if (["smba", "smbi"].indexOf(window.Store.Conn.platform) === -1) {
           throw "[LT01] Only Whatsapp business";
         }
@@ -1812,41 +1812,42 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
         });
 
         return await window.Store.Label.addOrRemoveLabels(actions, chats);
-      }, {
-      labelIds,
-      chatIds
+      },
+      {
+        labelIds,
+        chatIds,
       }
     );
   }
-  
+
   /**
- * group metadata
- * @param {*} chatId
- * @returns
- */
-async groupMetadata(chatId) {
-let chat = await this.mPage.evaluate(async (chatId) => {
-let chatWid = await window.Store.WidFactory.createWid(chatId);
-let chat = await window.Store.GroupMetadata.find(chatWid);
+   * group metadata
+   * @param {*} chatId
+   * @returns
+   */
+  async groupMetadata(chatId) {
+    let chat = await this.mPage.evaluate(async (chatId) => {
+      let chatWid = await window.Store.WidFactory.createWid(chatId);
+      let chat = await window.Store.GroupMetadata.find(chatWid);
 
-return chat.serialize();
-}, chatId);
+      return chat.serialize();
+    }, chatId);
 
-if (!chat) return false;
-return chat;
-}
+    if (!chat) return false;
+    return chat;
+  }
 
-/**
- * get name whatsapp
- * @param {*} jid
- * @returns
- */
-async getName(jid) {
-const contact = await this.getContactById(jid);
-return (
-contact.name || contact.pushname || contact.shortName || contact.number
-);
-}
+  /**
+   * get name whatsapp
+   * @param {*} jid
+   * @returns
+   */
+  async getName(jid) {
+    const contact = await this.getContactById(jid);
+    return (
+      contact.name || contact.pushname || contact.shortName || contact.number
+    );
+  }
   // end
 }
 
