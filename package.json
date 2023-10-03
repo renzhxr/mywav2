@@ -41,7 +41,7 @@
     "dotenv": "^16.0.0",
     "eslint": "^8.4.1",
     "eslint-plugin-mocha": "^10.0.3",
-    "file-type": "^18.2.1",
+    "file-type": "latest",
     "jsdoc": "^3.6.4",
     "jsdoc-baseline": "^0.1.5",
     "mocha": "^9.0.2",
