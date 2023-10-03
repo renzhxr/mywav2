@@ -89,21 +89,13 @@ browser = await playwright.chromium.connect(playwrightOpts);
 page = await browser.newPage();
 } else {
 const browserArgs = [...(playwrightOpts.args || [])];
-if (!browserArgs.find((arg) => arg.includes("--user-agent"))) {
+if(!browserArgs.find(arg => arg.includes('--user-agent'))) {
 browserArgs.push(`--user-agent=${this.options.userAgent}`);
 }
 
-browser = await playwright.chromium.launchPersistentContext(
-playwrightOpts.userDataDir,
-{
-...playwrightOpts,
-args: browserArgs,
-timeout: 0,
-}
-);
+browser = await playwright.chromium.launchPersistentContext('.mywajs_auth', {...playwrightOpts, args: browserArgs});
 page = (await browser.pages())[0];
 }
-
 if (this.options.proxyAuthentication !== undefined) {
 await page.authenticate(this.options.proxyAuthentication);
 }
@@ -199,9 +191,9 @@ PROGRESS_MESSAGE: "//*[@id='app']/div/div/div[3]",
 );
 
 console.log(
-  `You Used Selector: ${
-    this.options.selector ? this.options.selector : "default"
-  }`
+`You Used Selector: ${
+this.options.selector ? this.options.selector : "default"
+}`
 );
 
 const INTRO_IMG_SELECTOR =
