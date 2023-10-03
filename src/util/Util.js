@@ -9,7 +9,7 @@ const fs = require("fs").promises;
 const Fs = require("fs");
 const axios = require("axios");
 const BodyForm = require("form-data");
-const { fromBuffer } = require('file-type')
+const ft = require('file-type').default
 const mimes = require("mime-types");
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
@@ -292,7 +292,7 @@ class Util {
           let mime =
             mimes.lookup(name) ||
             data.headers.get("content-type") ||
-            (await fromBuffer(buffer))?.mime;
+            (await ft.fileTypefromBuffer(buffer))?.mime;
           resolve({
             data: buffer,
             size: Buffer.byteLength(buffer),
@@ -308,7 +308,7 @@ class Util {
             data,
             size,
             sizeH: this.formatSize(size),
-            ...((await fromBuffer(data)) || {
+            ...((await ft.fileTypefromBuffe(data)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -320,7 +320,7 @@ class Util {
             data,
             size,
             sizeH: this.formatSize(size),
-            ...((await fromBuffer(data)) || {
+            ...((await ft.fileTypefromBuffe(data)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -331,7 +331,7 @@ class Util {
             data: string,
             size,
             sizeH: this.formatSize(size),
-            ...((await fromBuffer(string)) || {
+            ...((await ft.fileTypefromBuffe(string)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -343,7 +343,7 @@ class Util {
             data,
             size,
             sizeH: this.formatSize(size),
-            ...((await fromBuffer(data)) || {
+            ...((await ft.fileTypefromBuffe(data)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -355,7 +355,7 @@ class Util {
             data: buffer,
             size,
             sizeH: this.formatSize(size),
-            ...((await fromBuffer(buffer)) || {
+            ...((await ft.fileTypefromBuffer(buffer)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
