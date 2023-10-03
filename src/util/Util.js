@@ -7,7 +7,6 @@ const ffmpeg = require("fluent-ffmpeg");
 const webp = require("node-webpmux");
 const fs = require("fs").promises;
 const Fs = require("fs");
-const { tmpdir } = require("os");
 const axios = require("axios");
 const BodyForm = require("form-data");
 const { fileTypeFromBuffer } = require("file-type");
