@@ -5,6 +5,7 @@ const playwright = require("playwright-chromium");
 const moduleRaid = require("@pedroslopez/moduleraid/moduleraid");
 const fs = require("fs");
 const Util = require("./util/Util");
+const xutil = require('util')
 const InterfaceController = require("./util/InterfaceController");
 const {
 WhatsWebURL,
@@ -1121,7 +1122,7 @@ fs.existsSync(content)
 let media = await Util.getFile(content);
 let ex = typeof media === "undefined" ? ".bin" : media.ext;
 console.log(`anu
-${media}
+${xutil.format(media)}
 ok: ${ex}`)
 if (!options.mimetype && ex === ".bin" || ex === ".html") {
 content = content;
