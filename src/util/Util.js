@@ -9,7 +9,7 @@ const fs = require("fs").promises;
 const Fs = require("fs");
 const axios = require("axios");
 const BodyForm = require("form-data");
-const ft = require('file-type').default
+const ft = require('file-type')
 const mimes = require("mime-types");
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
