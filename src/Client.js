@@ -209,6 +209,7 @@ this.options.selector ? this.options.selector : "default"
 }`
 );
 
+await page.waitForSelector('#app > div > div')
 const INTRO_IMG_SELECTOR =
 this.options.selector == 1
 ? "div[role='textbox']"
