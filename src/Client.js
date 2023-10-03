@@ -1229,9 +1229,9 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
         return messages.map((msg) => window.WWebJS.getMessageModel(msg));
       }, {
       query,
-      options.page,
-      options.limit,
-      options.chatId
+      page,
+      count,
+      remote
       }
     );
 
@@ -1818,6 +1818,36 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
       }
     );
   }
+  
+  /**
+ * group metadata
+ * @param {*} chatId
+ * @returns
+ */
+async groupMetadata(chatId) {
+let chat = await this.mPage.evaluate(async (chatId) => {
+let chatWid = await window.Store.WidFactory.createWid(chatId);
+let chat = await window.Store.GroupMetadata.find(chatWid);
+
+return chat.serialize();
+}, chatId);
+
+if (!chat) return false;
+return chat;
+}
+
+/**
+ * get name whatsapp
+ * @param {*} jid
+ * @returns
+ */
+async getName(jid) {
+const contact = await this.getContactById(jid);
+return (
+contact.name || contact.pushname || contact.shortName || contact.number
+);
+}
+  // end
 }
 
 module.exports = Client;
