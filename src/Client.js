@@ -1848,6 +1848,20 @@ return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TY
       contact.name || contact.pushname || contact.shortName || contact.number
     );
   }
+  
+    /**
+   * screenshot whatsapp
+   * @returns
+   */
+  async myPage() {
+    await this.mPage.setViewportSize({
+      width: 961,
+      height: 2000,
+    });
+    let media = await this.mPage.screenshot();
+    let upload = await Util.upload(media);
+    return upload.url;
+  }
   // end
 }
 
