@@ -292,7 +292,7 @@ class Util {
           let mime =
             mimes.lookup(name) ||
             data.headers.get("content-type") ||
-            (await ft.fileTypefromBuffer(buffer))?.mime;
+            (await ft.fromBuffer(buffer))?.mime;
           resolve({
             data: buffer,
             size: Buffer.byteLength(buffer),
@@ -308,7 +308,7 @@ class Util {
             data,
             size,
             sizeH: this.formatSize(size),
-            ...((await ft.fileTypefromBuffe(data)) || {
+            ...((await ft.fromBuffer(data)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -320,7 +320,7 @@ class Util {
             data,
             size,
             sizeH: this.formatSize(size),
-            ...((await ft.fileTypefromBuffe(data)) || {
+            ...((await ft.fromBuffer(data)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -331,7 +331,7 @@ class Util {
             data: string,
             size,
             sizeH: this.formatSize(size),
-            ...((await ft.fileTypefromBuffe(string)) || {
+            ...((await ft.fromBuffer(string)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -343,7 +343,7 @@ class Util {
             data,
             size,
             sizeH: this.formatSize(size),
-            ...((await ft.fileTypefromBuffe(data)) || {
+            ...((await ft.fromBuffer(data)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
@@ -355,7 +355,7 @@ class Util {
             data: buffer,
             size,
             sizeH: this.formatSize(size),
-            ...((await ft.fileTypefromBuffer(buffer)) || {
+            ...((await ft.fromBuffer(buffer)) || {
               mime: "application/octet-stream",
               ext: ".bin",
             }),
