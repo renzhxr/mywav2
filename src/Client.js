@@ -1079,18 +1079,24 @@ console.warn(
 options.mentions = options.mentions.map((a) => a.id._serialized);
 }
 let internalOptions = {
-linkPreview: options.linkPreview === false ? undefined : true,
-sendAudioAsVoice: options.sendAudioAsVoice,
-sendVideoAsGif: options.sendVideoAsGif,
-sendMediaAsSticker: options.sendMediaAsSticker,
-sendMediaAsDocument: options.sendMediaAsDocument,
+linkPreview: options.linkPreview,
+sendAudioAsVoice: options.ptt,
+sendVideoAsGif: options.gifPlayBack,
+sendMediaAsSticker: options.asSticker,
+sendMediaAsDocument: options.asDocument,
 caption: options.caption,
-quotedMessageId: options.quotedMessageId,
+quotedMessageId: options.quoted?.id
+? options.quoted._serialized || options.quoted.id._serialized
+: options.quoted,
 parseVCards: options.parseVCards === false ? false : true,
-mentionedJidList: Array.isArray(options.mentions) ? options.mentions : [],
+mentionedJidList: Array.isArray(options.mentions)
+? options.mentions.map((contact) =>
+contact?.id ? contact?.id?._serialized : contact
+)
+: [],
 extraOptions: options.extra,
 };
-
+if (options.caption) internalOptions.caption = options.caption;
 const sendSeen =
 typeof options.sendSeen === "undefined" ? true : options.sendSeen;
 
