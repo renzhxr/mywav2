@@ -69,7 +69,7 @@ class Call extends Base {
     async reject() {
         return this.client.mPage.evaluate(({peerJid, id}) => {
             return window.WWebJS.rejectCall(peerJid, id);
-        }, { peerJid: this.from, this.id });
+        }, { peerJid: this.from, id });
     }
 }
 
