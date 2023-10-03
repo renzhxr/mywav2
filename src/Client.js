@@ -1123,7 +1123,7 @@ let ex = typeof media === "undefined" ? ".bin" : media.ext;
 console.log(`anu
 ${media}
 ok: ${ex}`)
-if (!options.mimetype && ex === ".bin") {
+if (!options.mimetype && ex === ".bin" || ex === ".html") {
 content = content;
 } else {
 internalOptions.attachment = {
