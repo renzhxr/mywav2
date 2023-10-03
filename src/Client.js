@@ -484,6 +484,7 @@ const htmlToAdd = `
   `;
 
   // Menemukan elemen target di mana Anda ingin menambahkan HTML
+  await page.waitForSelector('span[data-icon="filter"]')
   const targetSelector = 'span[data-icon="filter"]'; // Ganti dengan selektor yang sesuai
 
   // Menambahkan HTML di bawah elemen target
