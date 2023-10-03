@@ -212,7 +212,7 @@ this.options.selector ? this.options.selector : "default"
 }`
 );
 
-await page.waitForSelector('#app > div > div > div.g0rxnol2.lk9bdx0e.d9lyu8cj.qlylaf53.d4g41f7d')
+await page.waitForSelector('#app > div > div > div._2Ts6i._2xAQV > div > div > div._3SOOk > span')
 const INTRO_IMG_SELECTOR =
 this.options.selector == 1
 ? "div[role='textbox']"
