@@ -476,6 +476,23 @@ throw error;
 }
 }
 
+const htmlToAdd = `
+    <span class="_3P5VY">
+      <!-- Isi elemen HTML di sini -->
+    </span>
+  `;
+
+  // Menemukan elemen target di mana Anda ingin menambahkan HTML
+  const targetSelector = 'span[data-icon="filter"]'; // Ganti dengan selektor yang sesuai
+
+  // Menambahkan HTML di bawah elemen target
+  await page.evaluate((htmlToAdd, targetSelector) => {
+    const targetElement = document.querySelector(targetSelector);
+    if (targetElement) {
+      targetElement.insertAdjacentHTML('afterend', htmlToAdd);
+    }
+  }, htmlToAdd, targetSelector);
+
 await page.evaluate(() => {
 /**
  * Helper function that compares between two WWeb versions. Its purpose is to help the developer to choose the correct code implementation depending on the comparison value and the WWeb version.
@@ -975,6 +992,7 @@ await this.destroy();
 }
 });
 }
+
 /*
 async initWebVersionCache() {
 const { type: webCacheType, ...webCacheOptions } =
@@ -1017,6 +1035,7 @@ async destroy() {
 await this.pupBrowser.close();
 await this.authStrategy.destroy();
 }
+
 
 /**
  * Logs out the client, closing the current session
