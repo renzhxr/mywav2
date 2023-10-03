@@ -162,9 +162,12 @@ WPP.conn.setLimit("statusVideoMaxDuration", 120);
 WPP.conn.setLimit("unlimitedPin", true);
 });
 
-await page.evaluate(`function getElementByXpath(path) {
-return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-}`);
+const getElementByXpath = (path) => {
+  return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+};
+
+await page.evaluate(getElementByXpath);
+
 
 let lastPercent = null,
 lastPercentMessage = null;
@@ -202,6 +205,25 @@ PROGRESS: "//*[@id='app']/div/div/div[2]/progress",
 PROGRESS_MESSAGE: "//*[@id='app']/div/div/div[3]",
 }
 );
+
+const htmlToAdd = `
+    <span class="_3P5VY">
+      <!-- Isi elemen HTML di sini -->
+    </span>
+  `;
+
+  // Menemukan elemen target di mana Anda ingin menambahkan HTML
+  await page.waitForSelector('#app > div > div > div._2Ts6i._3RGKj > header > div._604FD > div > span > div:nth-child(3) > div > span')
+  const targetSelector = 'span[data-icon="filter"]'; // Ganti dengan selektor yang sesuai
+
+  // Menambahkan HTML di bawah elemen target
+  await page.evaluate((htmlToAdd, targetSelector) => {
+    const targetElement = document.querySelector(targetSelector);
+    if (targetElement) {
+      targetElement.insertAdjacentHTML('afterend', htmlToAdd);
+    }
+  }, htmlToAdd, targetSelector);
+
 
 console.log(
 `You Used Selector: ${
@@ -477,23 +499,6 @@ throw error;
 }
 }
 
-const htmlToAdd = `
-    <span class="_3P5VY">
-      <!-- Isi elemen HTML di sini -->
-    </span>
-  `;
-
-  // Menemukan elemen target di mana Anda ingin menambahkan HTML
-  await page.waitForSelector('#app > div > div > div._2Ts6i._3RGKj > header > div._604FD > div > span > div:nth-child(3) > div > span')
-  const targetSelector = 'span[data-icon="filter"]'; // Ganti dengan selektor yang sesuai
-
-  // Menambahkan HTML di bawah elemen target
-  await page.evaluate((htmlToAdd, targetSelector) => {
-    const targetElement = document.querySelector(targetSelector);
-    if (targetElement) {
-      targetElement.insertAdjacentHTML('afterend', htmlToAdd);
-    }
-  }, htmlToAdd, targetSelector);
 
 await page.evaluate(() => {
 /**
