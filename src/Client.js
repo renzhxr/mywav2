@@ -85,18 +85,18 @@ await this.authStrategy.beforeBrowserInitialized();
 
 const playwrightOpts = this.options.playwright;
 
-  if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
-    browser = await playwright.chromium.connect(playwrightOpts);
-    page = await browser.newPage();
-  } else {
-    const browserArgs = [...(playwrightOpts.args || [])];
-    if (!browserArgs.find(arg => arg.includes('--user-agent'))) {
-      browserArgs.push(`--user-agent=${this.options.userAgent}`);
-    }
+if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
+browser = await playwright.chromium.connect(playwrightOpts);
+page = await browser.newPage();
+} else {
+const browserArgs = [...(playwrightOpts.args || [])];
+if (!browserArgs.find(arg => arg.includes('--user-agent'))) {
+browserArgs.push(`--user-agent=${this.options.userAgent}`);
+}
 
-    browser = await launchPersistentContext('.mywajs_auth', {...playwrightOpts, args: browserArgs});
-    page = await browser.newPage();
-  }
+browser = await playwright.chromium.launchPersistentContext('.mywajs_auth', {...playwrightOpts, args: browserArgs});
+page = await browser.newPage();
+}
 
 
 if (this.options.proxyAuthentication !== undefined) {
