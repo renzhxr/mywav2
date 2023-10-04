@@ -981,7 +981,7 @@ this.emit(Events.DISCONNECTED, "NAVIGATION");
 await this.destroy();
 }
 });
-}
+})
 
 /*
 async initWebVersionCache() {
