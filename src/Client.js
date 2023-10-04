@@ -212,6 +212,19 @@ this.options.selector ? this.options.selector : "default"
 }`
 );
 
+const title = '#app > div > div > div._2Ts6i._2xAQV > div > div > div._2v9n- > div._3RpB9 > h1'
+await page.waitForSelector(title)
+const result = await page.evaluate(title => {
+  const element = document.querySelector(title);
+  if (element) {
+    // Pastikan elemen ada sebelum mencoba mengakses properti
+    return element.innerText;
+  }
+  return null; // Mengembalikan null jika elemen tidak ditemukan
+}, title);
+
+console.log(result);
+
 const INTRO_IMG_SELECTOR =
 this.options.selector == 1
 ? "div[role='textbox']"
@@ -222,7 +235,7 @@ this.options.selector == 1
 : this.options.selector == 4
 ? `['[data-icon*=community]', '[data-icon*=status]', '[data-icon*=community]', '[data-icon*=chat]', '[data-icon*=back]', '[data-icon*=search]', '[data-icon*=filter]', '[data-icon*=lock-small]', '[data-icon*=chat]']`
 : this.options.selector == 5 ? '[data-testid="intro-md-beta-logo-dark"], [data-testid="intro-md-beta-logo-light"], [data-asset-intro-image-light="true"], [data-asset-intro-image-dark="true"],' +
-'[data-icon="intro-md-beta-logo-dark"], [data-icon="intro-md-beta-logo-light"]' : this.options.selector == 6 ? '#app > div > div > div._2Ts6i._2xAQV > div > div > div._3SOOk > span' : "[data-icon='search']";
+'[data-icon="intro-md-beta-logo-dark"], [data-icon="intro-md-beta-logo-light"]' : "[data-icon='search']";
 
 
 const INTRO_QRCODE_SELECTOR = "div[data-ref] canvas";
