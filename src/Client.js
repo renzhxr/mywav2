@@ -545,7 +545,7 @@ return operator === ">"
 };
 });
 
-await page.evaluate(ExposeStore, moduleRaid.toString());
+await page.evaluate(ExposeStore, moduleRaid?.toString());
 const authEventPayload = await this.authStrategy.getAuthEventPayload();
 
 /**
