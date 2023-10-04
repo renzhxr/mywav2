@@ -130,7 +130,7 @@ await this.authStrategy.afterBrowserInitialized();
 await page.setViewportSize({ width: 501, height: 700 });
 
 await page.goto(WhatsWebURL, {
-waitUntil: "load",
+waitUntil: "domcontentloaded",
 timeout: 0,
 referer: "https://whatsapp.com/",
 });
@@ -235,7 +235,7 @@ const needAuthentication = await Promise.race([
 new Promise((resolve) => {
 page
 .waitForSelector(INTRO_IMG_SELECTOR, {
-timeout: this.options.authTimeoutMs,
+timeout: this.options.authTimeoutMs
 })
 .then(() => resolve(false))
 .catch((err) => resolve(err));
@@ -330,13 +330,12 @@ QR_RETRY_BUTTON,
 };
 
 const handleLinkWithPhoneNumber = async () => {
-const LINK_WITH_PHONE_BUTTON = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[3]/div/span';
-const PHONE_NUMBER_INPUT = '//*[@id="app"]/div/div/div[3]/div[1]/div/div[3]/div[2]/div/div/div/form/input'
-const NEXT_BUTTON = '//*[@id="app"]/div/div/div[3]/div[1]/div/div[3]/div[3]/div'
-const CODE_CONTAINER =
-'//*[@id="link-device-phone-number-code-screen-instructions"]';
-const GENERATE_NEW_CODE_BUTTON = '[data-testid="popup-controls-ok"]';
-const LINK_WITH_PHONE_VIEW = "div._1x9Rv._3qC8O";
+  const LINK_WITH_PHONE_BUTTON = 'div._3rDmx div._2rQUO span._3iLTh';
+  const PHONE_NUMBER_INPUT = 'input.selectable-text';
+  const NEXT_BUTTON = 'div._1M6AF._3QJHf';
+  const CODE_CONTAINER = '[aria-details="link-device-phone-number-code-screen-instructions"]';
+  const GENERATE_NEW_CODE_BUTTON = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[1]/div[2]/a';
+  const LINK_WITH_PHONE_VIEW = 'div._1x9Rv._3qC8O';
 
 await page.exposeFunction("codeChanged", async (code) => {
 /**
@@ -350,7 +349,7 @@ const clickOnLinkWithPhoneButton = async () => {
 await page.waitForSelector(LINK_WITH_PHONE_BUTTON, {
 timeout: 0,
 });
-await page.click(LINK_WITH_PHONE_BUTTON);
+await page.click(LINK_WITH_PHONE_BUTTON, { visibility: true});
 };
 
 const typePhoneNumber = async () => {
@@ -359,7 +358,7 @@ const inputValue = await page.$eval(
 PHONE_NUMBER_INPUT,
 (el) => el.value
 );
-await page.click(PHONE_NUMBER_INPUT);
+await page.click(PHONE_NUMBER_INPUT, { visibility: true});
 for (let i = 0; i < inputValue.length; i++) {
 await page.keyboard.press("Backspace");
 }
@@ -376,11 +375,10 @@ await page.click(NEXT_BUTTON);
 await page.evaluate(
 async function (selectors) {
 function waitForElementToExist(selector, timeout = 60000) {
-return new Promise((resolve, reject) => {
+return new Promise(async (resolve, reject) => {
 if (document.querySelector(selector)) {
 return resolve(document.querySelector(selector));
 }
-
 const observer = new MutationObserver(() => {
 if (document.querySelector(selector)) {
 resolve(document.querySelector(selector));
