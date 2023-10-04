@@ -213,18 +213,6 @@ this.options.selector ? this.options.selector : "default"
 }`
 );
 
-const title = '#app > div > div > div._2Ts6i._2xAQV > div > div > div._2v9n- > div._3RpB9 > h1'
-await page.waitForSelector(title)
-const result = await page.evaluate(title => {
-  const element = document.querySelector(title);
-  if (element) {
-    // Pastikan elemen ada sebelum mencoba mengakses properti
-    return element.innerText;
-  }
-  return null; // Mengembalikan null jika elemen tidak ditemukan
-}, title);
-
-console.log(result);
 
 const INTRO_IMG_SELECTOR =
 this.options.selector == 1
