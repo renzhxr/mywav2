@@ -481,7 +481,7 @@ throw error;
 }
 
 
-await page.evaluate(() => {
+//await page.evaluate(() => {
 /**
  * Helper function that compares between two WWeb versions. Its purpose is to help the developer to choose the correct code implementation depending on the comparison value and the WWeb version.
  * @param {string} lOperand The left operand for the WWeb version string to compare with
@@ -533,7 +533,7 @@ return operator === ">"
 };
 });
 
-await page.evaluate(ExposeStore, moduleRaid?.toString());
+await page.evaluate(ExposeStore, moduleRaid.toString());
 const authEventPayload = await this.authStrategy.getAuthEventPayload();
 
 /**
