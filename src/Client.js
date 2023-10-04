@@ -108,6 +108,7 @@ timeout: 0,
 page = (await browser.pages())[0];
 }
 
+await page.waitForLoadState('domcontentloaded');
 
 if (this.options.proxyAuthentication !== undefined) {
 await page.authenticate(this.options.proxyAuthentication);
@@ -341,7 +342,7 @@ QR_RETRY_BUTTON,
 
 const handleLinkWithPhoneNumber = async () => {
 console.log('login phone')
-const LINK_WITH_PHONE_BUTTON = "div._3rDmx div._2rQUO span._3iLTh";
+const LINK_WITH_PHONE_BUTTON = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[3]/div/span';
 const PHONE_NUMBER_INPUT = "input.selectable-text";
 const NEXT_BUTTON = "div._1M6AF._3QJHf";
 const CODE_CONTAINER =
