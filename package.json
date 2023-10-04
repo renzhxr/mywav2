@@ -1,6 +1,6 @@
 {
-  "name": "whatsapp-web.js",
-  "version": "1.22.2-alpha.1",
+  "name": "mywajs",
+  "version": "2.0.8",
   "description": "Library for interacting with the WhatsApp Web API ",
   "main": "./index.js",
   "typings": "./index.d.ts",
@@ -12,17 +12,31 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pedroslopez/whatsapp-web.js.git"
+    "url": "git+https://github.com/amiruldev20/mywajs.git"
   },
-  "keywords": ["whatsapp", "whatsapp-web", "api", "bot", "client", "node"],
-  "author": "Pedro Lopez",
+  "keywords": [
+    "mywajs",
+    "bot whatsapp",
+    "amirul dev",
+    "baileys",
+    "wppconnect",
+    "openwa",
+    "whatsmeow",
+    "whatsapp",
+    "whatsapp-web",
+    "api",
+    "bot",
+    "client",
+    "node"
+  ],
+  "author": "Amirul Dev",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/pedroslopez/whatsapp-web.js/issues"
+    "url": "https://github.com/amiruldev20/mywajs/issues"
   },
   "homepage": "https://wwebjs.dev/",
   "dependencies": {
-    "@pedroslopez/moduleraid": "^5.0.2",
+    "@pedroslopez/moduleraid": "latest",
     "@wppconnect/wa-js": "github:wppconnect-team/wa-js",
     "fluent-ffmpeg": "^2.1.2",
     "file-type": "^16.5.4",

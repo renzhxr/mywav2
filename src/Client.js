@@ -130,7 +130,7 @@ await this.authStrategy.afterBrowserInitialized();
 await page.setViewportSize({ width: 501, height: 700 });
 
 await page.goto(WhatsWebURL, {
-waitUntil: "domcontentloaded",
+waitUntil: "load",
 timeout: 0,
 referer: "https://whatsapp.com/",
 });
