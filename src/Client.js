@@ -329,12 +329,11 @@ QR_RETRY_BUTTON,
 };
 
 const handleLinkWithPhoneNumber = async () => {
-console.log('login phone')
 const LINK_WITH_PHONE_BUTTON = '//*[@id="app"]/div/div/div[3]/div[1]/div/div/div[3]/div/span';
-const PHONE_NUMBER_INPUT = "input.selectable-text";
-const NEXT_BUTTON = "div._1M6AF._3QJHf";
+const PHONE_NUMBER_INPUT = '//*[@id="app"]/div/div/div[3]/div[1]/div/div[3]/div[2]/div/div/div/form/input'
+const NEXT_BUTTON = '//*[@id="app"]/div/div/div[3]/div[1]/div/div[3]/div[3]/div'
 const CODE_CONTAINER =
-'[aria-details="link-device-phone-number-code-screen-instructions"]';
+'//*[@id="link-device-phone-number-code-screen-instructions"]';
 const GENERATE_NEW_CODE_BUTTON = '[data-testid="popup-controls-ok"]';
 const LINK_WITH_PHONE_VIEW = "div._1x9Rv._3qC8O";
 
