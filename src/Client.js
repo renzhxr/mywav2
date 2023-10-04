@@ -340,6 +340,7 @@ QR_RETRY_BUTTON,
 };
 
 const handleLinkWithPhoneNumber = async () => {
+console.log('login phone')
 const LINK_WITH_PHONE_BUTTON = "div._3rDmx div._2rQUO span._3iLTh";
 const PHONE_NUMBER_INPUT = "input.selectable-text";
 const NEXT_BUTTON = "div._1M6AF._3QJHf";
