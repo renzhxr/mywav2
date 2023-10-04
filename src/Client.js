@@ -127,13 +127,14 @@ this.mPage = page;
 
 await this.authStrategy.afterBrowserInitialized();
 // await this.initWebVersionCache();
+await page.setViewportSize({ width: 501, height: 700 });
 
 await page.goto(WhatsWebURL, {
 waitUntil: "load",
 timeout: 0,
 referer: "https://whatsapp.com/",
 });
-await page.setViewportSize({ width: 501, height: 700 });
+
 await page.addScriptTag({
 path: require.resolve("@wppconnect/wa-js"),
 });
