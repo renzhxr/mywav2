@@ -225,7 +225,7 @@ this.options.selector == 1
 : this.options.selector == 4
 ? `['[data-icon*=community]', '[data-icon*=status]', '[data-icon*=community]', '[data-icon*=chat]', '[data-icon*=back]', '[data-icon*=search]', '[data-icon*=filter]', '[data-icon*=lock-small]', '[data-icon*=chat]']`
 : this.options.selector == 5 ? '[data-testid="intro-md-beta-logo-dark"], [data-testid="intro-md-beta-logo-light"], [data-asset-intro-image-light="true"], [data-asset-intro-image-dark="true"],' +
-'[data-icon="intro-md-beta-logo-dark"], [data-icon="intro-md-beta-logo-light"]' : "[data-icon='search']";
+'[data-icon="intro-md-beta-logo-dark"], [data-icon="intro-md-beta-logo-light"]' : this.options.selector == 6 ? '#side > div._3gYev > div > div._1EUay > div._2vDPL' : "[data-icon='search']";
 
 
 const INTRO_QRCODE_SELECTOR = "div[data-ref] canvas";
