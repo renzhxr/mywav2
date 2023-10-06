@@ -86,7 +86,7 @@ class Client extends EventEmitter {
 
     const playwrightOpts = this.options.playwright;
     if (playwrightOpts && playwrightOpts.browserWSEndpoint) {
-      browser = await playwright.chromium.connect(playwrightOpts.wsEndpoint, {
+      browser = await playwright.firefox.connect(playwrightOpts.wsEndpoint, {
         timeout: 0,
         ...playwrightOpts,
       });
@@ -97,7 +97,7 @@ class Client extends EventEmitter {
         browserArgs.push(`--user-agent=${this.options.userAgent}`);
       }
 
-      browser = await playwright.chromium.launchPersistentContext(
+      browser = await playwright.firefox.launchPersistentContext(
         '.mywajs_auth',
         {
           ...playwrightOpts,
