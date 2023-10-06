@@ -1119,10 +1119,9 @@ isAvatar: options?.isAvatar
 ? options.isAvatar
 : global?.Exif?.isAvatar,
 },
-this.playPage
+this.mPage
 );
 }
-
 const newMessage = await this.mPage.evaluate(
 async (chatId, message, options, sendSeen) => {
 const chatWid = window.Store.WidFactory.createWid(chatId);
@@ -1143,7 +1142,7 @@ return msg.serialize();
 chatId,
 content,
 internalOptions,
-sendSeen,
+sendSeen
 }
 );
 
