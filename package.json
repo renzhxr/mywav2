@@ -36,6 +36,7 @@
   },
   "homepage": "https://wwebjs.dev/",
   "dependencies": {
+    "@chromium": "github:amiruldev20/chromium",
     "@pedroslopez/moduleraid": "latest",
     "@wppconnect/wa-js": "github:wppconnect-team/wa-js",
     "fluent-ffmpeg": "^2.1.2",
@@ -47,7 +48,6 @@
     "os": "^0.1.2",
     "path": "^0.12.7",
     "qrcode-terminal": "latest",
-    "@chromium": "github:puppeteer/puppeteer",
     "v8": "^0.1.0"
   },
   "devDependencies": {
