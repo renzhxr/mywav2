@@ -1,7 +1,7 @@
 "use strict";
 
 const EventEmitter = require("events");
-const chromium = require("@chromium");
+const chromium = require("chromium");
 const moduleRaid = require("@pedroslopez/moduleraid/moduleraid");
 const fs = require("fs");
 const Util = require("./util/Util");
