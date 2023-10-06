@@ -1,7 +1,7 @@
 
 import { EventEmitter } from 'events'
 import { RequestInit } from 'node-fetch'
-import * as playwright from 'playwright-chromium'
+import * as chromium from '@chromium'
 
 declare namespace WAWebJS {
 
@@ -11,11 +11,11 @@ declare namespace WAWebJS {
         /** Current connection information */
         public info: ClientInfo
 
-        /** playwright page running WhatsApp Web */
-        mPage?: playwright.Page
+        /** chromium page running WhatsApp Web */
+        mPage?: chromium.Page
 
         /** Puppeteer browser running WhatsApp Web */
-        pupBrowser?: playwright.Browser
+        pupBrowser?: chromium.Browser
 
         /**Accepts an invitation to join a group */
         acceptInvite(inviteCode: string): Promise<string>
@@ -385,7 +385,7 @@ declare namespace WAWebJS {
          * @default 0 */
         authTimeoutMs?: number,
         /** Puppeteer launch options. View docs here: https://github.com/puppeteer/puppeteer/ */
-        playwright ? : playwright.LaunchOptions & playwright.ConnectOptions;
+        chromium ? : chromium.LaunchOptions & chromium.ConnectOptions;
 		/** Determines how to save and restore sessions. Will use LegacySessionAuth if options.session is set. Otherwise, NoAuth will be used. */
         authStrategy?: AuthStrategy,
         /** The version of WhatsApp Web to use. Use options.webVersionCache to configure how the version is retrieved. */
