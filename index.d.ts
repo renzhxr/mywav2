@@ -1,7 +1,7 @@
 
 import { EventEmitter } from 'events'
 import { RequestInit } from 'node-fetch'
-import * as chromium from '@amiruldev/chromium'
+import * as chromium from 'puppeteer'
 
 declare namespace WAWebJS {
 
