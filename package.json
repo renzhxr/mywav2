@@ -46,7 +46,7 @@
     "node-webpmux": "^3.1.0",
     "os": "^0.1.2",
     "path": "^0.12.7",
-    "puppeteer": "github:puppeteer/puppeteer",
+    "puppeteer-extra": "github:berstend/puppeteer-extra",
     "qrcode-terminal": "latest",
     "v8": "^0.1.0"
   },
