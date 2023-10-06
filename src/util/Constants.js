@@ -3,7 +3,7 @@
 exports.WhatsWebURL = 'https://web.whatsapp.com/';
 
 exports.DefaultOptions = {
-    playwright: {
+    chromium: {
         headless: true,
         defaultViewport: null
     },
