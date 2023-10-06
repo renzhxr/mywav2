@@ -36,9 +36,9 @@
   },
   "homepage": "https://wwebjs.dev/",
   "dependencies": {
-    "@chromium": "github:amiruldev20/chromium",
     "@pedroslopez/moduleraid": "latest",
     "@wppconnect/wa-js": "github:wppconnect-team/wa-js",
+    "chromium": "github:amiruldev20/chromium",
     "fluent-ffmpeg": "^2.1.2",
     "file-type": "^16.5.4",
     "jsqr": "^1.3.1",
