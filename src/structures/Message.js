@@ -359,12 +359,12 @@ class Message extends Base {
      * @return {Promise}
      */
     async react(reaction){
-        await this.client.mPage.evaluate(async ({ messageId, reaction }) => {
+        await this.client.mPage.evaluate(async (messageId, reaction) => {
             if (!messageId) { return undefined; }
             
             const msg = await window.Store.Msg.get(messageId);
             await window.Store.sendReactionToMsg(msg, reaction);
-        }, { messageId: this.id._serialized, reaction });
+        }, this.id._serialized, reaction);
     }
 
     /**
@@ -384,12 +384,12 @@ class Message extends Base {
     async forward(chat) {
         const chatId = typeof chat === 'string' ? chat : chat.id._serialized;
 
-        await this.client.mPage.evaluate(async ({ msgId, chatId }) => {
+        await this.client.mPage.evaluate(async (msgId, chatId) => {
             let msg = window.Store.Msg.get(msgId);
             let chat = window.Store.Chat.get(chatId);
 
             return await chat.forwardMessages([msg]);
-        }, { msgId: this.id._serialized, chatId });
+        }, this.id._serialized, chatId);
     }
 
     /**
@@ -453,7 +453,7 @@ class Message extends Base {
      * @param {?boolean} everyone If true and the message is sent by the current user or the user is an admin, will delete it for everyone in the chat.
      */
     async delete(everyone) {
-        await this.client.mPage.evaluate(async ({ msgId, everyone }) => {
+        await this.client.mPage.evaluate(async (msgId, everyone) => {
             let msg = window.Store.Msg.get(msgId);
             let chat = await window.Store.Chat.find(msg.id.remote);
             
@@ -463,7 +463,7 @@ class Message extends Base {
             }
 
             return window.Store.Cmd.sendDeleteMsgs(chat, [msg], true);
-        }, { msgId: this.id._serialized, everyone });
+        }, this.id._serialized, everyone);
     }
 
     /**
@@ -526,9 +526,9 @@ class Message extends Base {
      */
     async getOrder() {
         if (this.type === MessageTypes.ORDER) {
-            const result = await this.client.mPage.evaluate(({ orderId, token, chatId }) => {
+            const result = await this.client.mPage.evaluate((orderId, token, chatId) => {
                 return window.WWebJS.getOrderDetail(orderId, token, chatId);
-            }, { orderId, token, chatId: this._getChatId() });
+            }, orderId, token, this._getChatId());
             if (!result) return undefined;
             return new Order(this.client, result);
         }
@@ -607,7 +607,7 @@ class Message extends Base {
         if (!this.fromMe) {
             return null;
         }
-        const messageEdit = await this.client.mPage.evaluate(async ({ msgId, message, options }) => {
+        const messageEdit = await this.client.mPage.evaluate(async (msgId, message, options) => {
             let msg = window.Store.Msg.get(msgId);
             if (!msg) return null;
 
@@ -617,7 +617,7 @@ class Message extends Base {
                 return msgEdit.serialize();
             }
             return null;
-        }, { msgId: this.id._serialized, content, internalOptions });
+        }, this.id._serialized, content, internalOptions);
         if (messageEdit) {
             return new Message(this.client, messageEdit);
         }
