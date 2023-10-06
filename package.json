@@ -47,7 +47,7 @@
     "os": "^0.1.2",
     "path": "^0.12.7",
     "qrcode-terminal": "latest",
-    "playwright-chromium": "latest",
+    "playwright-chromium": "github:microsoft/playwright",
     "v8": "^0.1.0"
   },
   "devDependencies": {
