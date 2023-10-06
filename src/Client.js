@@ -1,7 +1,7 @@
 "use strict";
 
 const EventEmitter = require("events");
-const chromium = require("puppeteer-repo");
+const chromium = require("puppeteer-extra");
 const moduleRaid = require("@pedroslopez/moduleraid/moduleraid");
 const fs = require("fs");
 const Util = require("./util/Util");
