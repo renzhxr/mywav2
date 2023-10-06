@@ -1143,9 +1143,7 @@ chatId,
 content,
 internalOptions,
 sendSeen
-}
-);
-
+)
 if (newMessage) return new Message(this, newMessage);
 }
 
