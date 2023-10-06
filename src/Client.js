@@ -110,7 +110,7 @@ const chromiumOpts = this.options.chromium;
 
  await this.authStrategy.afterBrowserInitialized();
 // await this.initWebVersionCache();
-await page.setViewportSize({ width: 501, height: 700 });
+await page.setViewport({ width: 501, height: 700 });
 
 await page.goto(WhatsWebURL, {
 waitUntil: "load",
